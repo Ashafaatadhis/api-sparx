@@ -9,3 +9,14 @@ export const hashPassword = async (
     return false;
   }
 };
+
+export const verifyPassword = async (
+  hashPassword: string,
+  password: string
+) => {
+  try {
+    return await argon2.verify(hashPassword, password);
+  } catch (err) {
+    return false;
+  }
+};
