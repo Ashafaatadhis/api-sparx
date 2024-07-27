@@ -33,6 +33,7 @@ CREATE TABLE `SubGenre` (
     `updatedAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `deletedAt` DATETIME(3) NULL,
 
+    INDEX `SubGenre_genreId_fkey`(`genreId`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -54,6 +55,9 @@ CREATE TABLE `Song` (
     `updatedAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `deletedAt` DATETIME(3) NULL,
 
+    INDEX `Song_genreId_fkey`(`genreId`),
+    INDEX `Song_subGenreId_fkey`(`subGenreId`),
+    INDEX `Song_uploadedBy_fkey`(`uploadedBy`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -67,6 +71,7 @@ CREATE TABLE `Playlist` (
     `updatedAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `deletedAt` DATETIME(3) NULL,
 
+    INDEX `Playlist_createdBy_fkey`(`createdBy`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -79,6 +84,8 @@ CREATE TABLE `PlaylistSong` (
     `updatedAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `deletedAt` DATETIME(3) NULL,
 
+    INDEX `PlaylistSong_playlistId_fkey`(`playlistId`),
+    INDEX `PlaylistSong_songId_fkey`(`songId`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -95,6 +102,7 @@ CREATE TABLE `DownloadPermission` (
 
     UNIQUE INDEX `DownloadPermission_songId_key`(`songId`),
     UNIQUE INDEX `DownloadPermission_playlistId_key`(`playlistId`),
+    INDEX `DownloadPermission_userId_fkey`(`userId`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -120,10 +128,10 @@ ALTER TABLE `PlaylistSong` ADD CONSTRAINT `PlaylistSong_playlistId_fkey` FOREIGN
 ALTER TABLE `PlaylistSong` ADD CONSTRAINT `PlaylistSong_songId_fkey` FOREIGN KEY (`songId`) REFERENCES `Song`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `DownloadPermission` ADD CONSTRAINT `DownloadPermission_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `User`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `DownloadPermission` ADD CONSTRAINT `DownloadPermission_playlistId_fkey` FOREIGN KEY (`playlistId`) REFERENCES `Playlist`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `DownloadPermission` ADD CONSTRAINT `DownloadPermission_songId_fkey` FOREIGN KEY (`songId`) REFERENCES `Song`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `DownloadPermission` ADD CONSTRAINT `DownloadPermission_playlistId_fkey` FOREIGN KEY (`playlistId`) REFERENCES `Playlist`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE `DownloadPermission` ADD CONSTRAINT `DownloadPermission_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `User`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;

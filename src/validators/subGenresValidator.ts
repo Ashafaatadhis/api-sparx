@@ -21,7 +21,7 @@ const postValidationRules = () => {
         try {
           const result = await prisma.genre.findFirst({
             where: {
-              id: value,
+              id: parseInt(value),
             },
           });
           if (!result) throw new Error("Genre Not Found");
@@ -52,7 +52,7 @@ const editValidationRules = () => {
         try {
           const result = await prisma.genre.findFirst({
             where: {
-              id: value,
+              id: parseInt(value),
             },
           });
           if (!result) throw new Error("Genre Not Found");
