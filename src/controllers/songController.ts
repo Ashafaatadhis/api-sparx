@@ -180,22 +180,22 @@ export const deleteController = async (req: Request, res: Response) => {
     }
 
     if (!(await deleteData(id))) {
-      logger.error("Delete Error: Failed to Delete This Genre");
+      logger.error("Delete Error: Failed to Delete This Song");
       return res
         .status(500)
-        .json({ status: 500, message: "Failed to Delete This Genre" });
+        .json({ status: 500, message: "Failed to Delete This Song" });
     }
     if (song.filePath) await deleteFile(song.filePath);
     if (song.coverSong) await deleteFile(song.coverSong);
-    logger.info("Delete Success: Success to Delete This Genre");
+    logger.info("Delete Success: Success to Delete This Song");
     return res.status(200).json({
       status: 200,
-      message: "Successfully Delete This Genre",
+      message: "Successfully Delete This Song",
     });
   } catch (err: any) {
-    logger.error("Delete Error: Failed to Delete This Genre");
+    logger.error("Delete Error: Failed to Delete This Song");
     return res
       .status(500)
-      .json({ status: 500, message: "Failed to Delete This Genre" });
+      .json({ status: 500, message: "Failed to Delete This Song" });
   }
 };
