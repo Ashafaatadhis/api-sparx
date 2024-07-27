@@ -32,6 +32,13 @@ export const editData = async (data: Genre, id: string) => {
   return result;
 };
 export const deleteData = async (id: string) => {
+  const find = await prisma.genre.findFirst({
+    where: {
+      id: parseInt(id),
+    },
+  });
+
+  if (!find) return false;
   const result = await prisma.genre.delete({
     where: {
       id: parseInt(id),
