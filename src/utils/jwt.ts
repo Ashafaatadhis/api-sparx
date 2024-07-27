@@ -1,8 +1,17 @@
+import { User } from "@prisma/client";
 import jwt from "jsonwebtoken";
 
-const sign = (user: { id: number; username: string }) => {
+export type IPayload = {
+  sub: number;
+  username: string;
+  role: "ADMIN" | "USER";
+  iat: number;
+  exp: number;
+};
+
+const sign = (user: User) => {
   return jwt.sign(
-    { sub: user.id, username: user.username },
+    { sub: user.id, username: user.username, role: user.role },
     process.env.JWT_SECRET as string,
     { expiresIn: "3h" }
   );
