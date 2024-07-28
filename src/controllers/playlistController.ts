@@ -9,11 +9,11 @@ import {
   getDataSongInPlaylist,
   deleteSongInPlaylist,
 } from "@/services/playlistServices";
-import { getDetail as getDetailSong } from "@/services/songServices";
+
 import { responsePlaylist, responsePlaylistSong } from "@/dto/playlist.dto";
 import logger from "@/utils/logger";
 import { RequestCustom } from "@/middlewares/authMiddleware";
-import { uploadSingle } from "@/utils/uploadFile";
+
 import playlistPolicy from "@/policy/playlistPolicy";
 
 export const getAllController = async (req: RequestCustom, res: Response) => {
