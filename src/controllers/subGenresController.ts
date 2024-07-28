@@ -51,8 +51,8 @@ export const postController = async (req: Request, res: Response) => {
   try {
     const result = await insertData(req.body);
     logger.info("Add Success: Success to Add New Sub Genre");
-    return res.status(200).json({
-      status: 200,
+    return res.status(201).json({
+      status: 201,
       message: "Successfully Add New Sub Genre",
       data: responseSubGenre(result),
     });
