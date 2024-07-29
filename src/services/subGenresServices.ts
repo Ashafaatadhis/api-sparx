@@ -4,6 +4,11 @@ import { SubGenre } from "@prisma/client";
 export const getAll = async () => {
   const result = await prisma.subGenre.findMany({
     include: { Genre: { select: { genreName: true } } },
+    where: {
+      Genre: {
+        deletedAt: null,
+      },
+    },
   });
 
   return result;
@@ -13,6 +18,7 @@ export const getDetail = async (id: string) => {
     include: { Genre: { select: { genreName: true } } },
     where: {
       id: parseInt(id),
+      deletedAt: null,
     },
   });
   return result;

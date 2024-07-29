@@ -4,6 +4,7 @@ import genresRoutes from "@/routes/genresRoutes";
 import subGenresRoutes from "@/routes/subGenresRoutes";
 import songRoutes from "@/routes/songRoutes";
 import playlistRoutes from "@/routes/playlistRoutes";
+import publicPlaylistRoutes from "@/routes/publicPlaylistRoutes";
 
 const router = express.Router();
 
@@ -12,5 +13,6 @@ router.use("/genres", genresRoutes);
 router.use("/sub-genres", subGenresRoutes);
 router.use("/songs", songRoutes);
 router.use("/playlists", playlistRoutes);
+router.use("/public/playlists", publicPlaylistRoutes);
 
 export default router;
