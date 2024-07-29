@@ -22,10 +22,13 @@ export const checkAudio = (form: string, type: "POST" | "EDIT") => {
     const extension = path.extname(file.name).toLowerCase();
     const mimeType = file.mimetype;
 
-    if (extension !== ".mp3" || mimeType !== "audio/mpeg") {
+    if (
+      ![".mp3", ".wav"].includes(extension) ||
+      !["audio/mpeg", "audio/wave"].includes(mimeType)
+    ) {
       return res
         .status(500)
-        .json({ status: 500, message: `${form} must be in MP3 Format` });
+        .json({ status: 500, message: `${form} must be in MP3 or WAV Format` });
     }
 
     const metadata = await mm.parseBuffer(file.data, "audio/mpeg");

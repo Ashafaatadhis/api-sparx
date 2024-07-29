@@ -22,7 +22,9 @@ export default function rbacMiddleware(
     ) {
       next();
     } else {
-      return res.status(401).json({ status: 401, message: "Forbidden" });
+      return res
+        .status(401)
+        .json({ status: 401, message: "Unauthorized access" });
     }
   };
 }

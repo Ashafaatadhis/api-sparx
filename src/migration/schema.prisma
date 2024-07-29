@@ -16,7 +16,7 @@ enum Role {
 
 model User {
   id       Int    @id @default(autoincrement())
-  username String @unique
+  username String 
   password String
   email    String
   role     Role  
@@ -27,7 +27,26 @@ model User {
   song Song[] 
   playlist Playlist[]
   downloadPermission DownloadPermission[]
+
+  @@unique([username, deletedAt])
 }
+
+model DownloadPermission {
+  id         Int    @id @default(autoincrement())
+  userId     Int
+  songId     Int?  
+  playlistId Int?  
+  format     String
+  User       User     @relation(fields: [userId], references: [id],onDelete: Cascade, onUpdate: Cascade)
+  Song       Song?    @relation(fields: [songId], references: [id],onDelete: Cascade, onUpdate: Cascade)
+  Playlist   Playlist? @relation(fields: [playlistId], references: [id],onDelete: Cascade, onUpdate: Cascade)
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @default(now())
+  deletedAt  DateTime?
+
+  @@unique([userId, songId, playlistId, deletedAt])
+}
+
 
 model Genre {
   id       Int    @id @default(autoincrement())
@@ -75,7 +94,7 @@ model Song {
   deletedAt  DateTime?
 
   playlistSong PlaylistSong[]
-  downloadPermission DownloadPermission?
+  downloadPermission DownloadPermission[]
 }
 
 
@@ -91,7 +110,7 @@ model Playlist {
   deletedAt  DateTime?
 
   playlistSong PlaylistSong[]
-  downloadPermission DownloadPermission?
+  downloadPermission DownloadPermission[]
 }
 
 model PlaylistSong {
@@ -105,16 +124,3 @@ model PlaylistSong {
   deletedAt  DateTime?
 }
 
-model DownloadPermission {
-  id         Int    @id @default(autoincrement())
-  userId     Int
-  songId     Int? @unique
-  playlistId Int? @unique
-  format     String
-  User       User     @relation(fields: [userId], references: [id],onDelete: Cascade, onUpdate: Cascade)
-  Song       Song?    @relation(fields: [songId], references: [id],onDelete: Cascade, onUpdate: Cascade)
-  Playlist   Playlist? @relation(fields: [playlistId], references: [id],onDelete: Cascade, onUpdate: Cascade)
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @default(now())
-  deletedAt  DateTime?
-}

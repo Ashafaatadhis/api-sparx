@@ -12,7 +12,7 @@ export const register = async (req: Request, res: Response) => {
     const regist = await registerService(req.body);
 
     if (!regist) {
-      logger.error("Register Error: Failed to register user");
+      logger.error("Register Error: username is existed");
       return res
         .status(400)
         .json({ status: 400, message: "Failed to register user" });

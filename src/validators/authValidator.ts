@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from "express";
+
 import { check, matchedData, validationResult } from "express-validator";
 
 const registerValidationRules = () => {
