@@ -18,7 +18,7 @@
     "db:migrate": "npx prisma migrate dev --schema=./src/migration/schema.prisma",
     "db:reset": "npx prisma migrate reset --preview-feature --schema=./src/migration/schema.prisma",
     "seed": "npx prisma db seed",
-    "test": "cross-env NODE_ENV=test npx prisma generate --schema=./src/migration/schema.prisma &&  cross-env NODE_ENV=tes jest --detectOpenHandles --runInBand"
+    "test": "cross-env NODE_ENV=test npx prisma generate --schema=./src/migration/schema.prisma &&  cross-env NODE_ENV=tes jest --detectOpenHandles --runInBand --coverage"
   },
   "keywords": [],
   "author": "",
