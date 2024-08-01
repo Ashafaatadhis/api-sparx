@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<<<<<<< HEAD
 <coverage generated="1722382147120" clover="3.2.0">
   <project timestamp="1722382147120" name="All files">
     <metrics statements="1136" coveredstatements="399" conditionals="299" coveredconditionals="26" methods="265" coveredmethods="23" elements="1700" coveredelements="448" complexity="0" loc="1136" ncloc="1136" packages="13" files="56" classes="56"/>
@@ -71,11 +72,21 @@
       <metrics statements="16" coveredstatements="16" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
       <file name="app.ts" path="D:\CODING\sparx\api-sparx\src\app.ts">
         <metrics statements="16" coveredstatements="16" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+=======
+<coverage generated="1722383430785" clover="3.2.0">
+  <project timestamp="1722383430785" name="All files">
+    <metrics statements="25" coveredstatements="24" conditionals="2" coveredconditionals="2" methods="2" coveredmethods="0" elements="29" coveredelements="26" complexity="0" loc="25" ncloc="25" packages="3" files="4" classes="4"/>
+    <package name="src">
+      <metrics statements="13" coveredstatements="13" conditionals="2" coveredconditionals="2" methods="0" coveredmethods="0"/>
+      <file name="app.ts" path="C:\Users\Nugraha Adhitama\Documents\api-sparx\src\app.ts">
+        <metrics statements="13" coveredstatements="13" conditionals="2" coveredconditionals="2" methods="0" coveredmethods="0"/>
+>>>>>>> 434e6bb24f70892e9ea5107b1895cc230c552cbe
         <line num="1" count="1" type="stmt"/>
         <line num="2" count="1" type="stmt"/>
         <line num="3" count="1" type="stmt"/>
         <line num="4" count="1" type="stmt"/>
         <line num="5" count="1" type="stmt"/>
+<<<<<<< HEAD
         <line num="6" count="1" type="stmt"/>
         <line num="7" count="1" type="stmt"/>
         <line num="9" count="1" type="stmt"/>
@@ -92,11 +103,35 @@
     <package name="src.config">
       <metrics statements="22" coveredstatements="9" conditionals="13" coveredconditionals="0" methods="2" coveredmethods="0"/>
       <file name="cloudinary.ts" path="D:\CODING\sparx\api-sparx\src\config\cloudinary.ts">
+=======
+        <line num="7" count="1" type="stmt"/>
+        <line num="9" count="1" type="stmt"/>
+        <line num="10" count="1" type="cond" truecount="2" falsecount="0"/>
+        <line num="12" count="1" type="stmt"/>
+        <line num="13" count="1" type="stmt"/>
+        <line num="14" count="1" type="stmt"/>
+        <line num="15" count="1" type="stmt"/>
+        <line num="17" count="1" type="stmt"/>
+      </file>
+    </package>
+    <package name="src.controllers">
+      <metrics statements="2" coveredstatements="1" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="0"/>
+      <file name="authController.ts" path="C:\Users\Nugraha Adhitama\Documents\api-sparx\src\controllers\authController.ts">
+        <metrics statements="2" coveredstatements="1" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="0"/>
+        <line num="3" count="1" type="stmt"/>
+        <line num="4" count="0" type="stmt"/>
+      </file>
+    </package>
+    <package name="src.routes">
+      <metrics statements="10" coveredstatements="10" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+      <file name="authRoutes.ts" path="C:\Users\Nugraha Adhitama\Documents\api-sparx\src\routes\authRoutes.ts">
+>>>>>>> 434e6bb24f70892e9ea5107b1895cc230c552cbe
         <metrics statements="5" coveredstatements="5" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
         <line num="1" count="1" type="stmt"/>
         <line num="2" count="1" type="stmt"/>
         <line num="4" count="1" type="stmt"/>
         <line num="6" count="1" type="stmt"/>
+<<<<<<< HEAD
         <line num="12" count="1" type="stmt"/>
       </file>
       <file name="prisma.ts" path="D:\CODING\sparx\api-sparx\src\config\prisma.ts">
@@ -1343,6 +1378,17 @@
         <line num="152" count="0" type="stmt"/>
         <line num="158" count="0" type="stmt"/>
         <line num="161" count="1" type="stmt"/>
+=======
+        <line num="8" count="1" type="stmt"/>
+      </file>
+      <file name="index.ts" path="C:\Users\Nugraha Adhitama\Documents\api-sparx\src\routes\index.ts">
+        <metrics statements="5" coveredstatements="5" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+        <line num="1" count="1" type="stmt"/>
+        <line num="2" count="1" type="stmt"/>
+        <line num="4" count="1" type="stmt"/>
+        <line num="6" count="1" type="stmt"/>
+        <line num="8" count="1" type="stmt"/>
+>>>>>>> 434e6bb24f70892e9ea5107b1895cc230c552cbe
       </file>
     </package>
   </project>

@@ -1,4 +1,5 @@
 TN:
+<<<<<<< HEAD
 SF:dist\src\app.js
 FN:2,(anonymous_0)
 FNF:1
@@ -137,6 +138,8 @@ BRF:7
 BRH:7
 end_of_record
 TN:
+=======
+>>>>>>> 434e6bb24f70892e9ea5107b1895cc230c552cbe
 SF:src\app.ts
 FNF:0
 FNH:0
@@ -145,6 +148,7 @@ DA:2,1
 DA:3,1
 DA:4,1
 DA:5,1
+<<<<<<< HEAD
 DA:6,1
 DA:7,1
 DA:9,1
@@ -177,12 +181,32 @@ BRH:0
 end_of_record
 TN:
 SF:src\config\prisma.ts
+=======
+DA:7,1
+DA:9,1
+DA:10,1
+DA:12,1
+DA:13,1
+DA:14,1
+DA:15,1
+DA:17,1
+LF:13
+LH:13
+BRDA:10,0,0,1
+BRDA:10,0,1,1
+BRF:2
+BRH:2
+end_of_record
+TN:
+SF:src\controllers\authController.ts
+>>>>>>> 434e6bb24f70892e9ea5107b1895cc230c552cbe
 FN:3,(anonymous_7)
 FN:3,(anonymous_8)
 FNF:2
 FNH:0
 FNDA:0,(anonymous_7)
 FNDA:0,(anonymous_8)
+<<<<<<< HEAD
 DA:1,1
 DA:2,1
 DA:3,1
@@ -1044,6 +1068,8 @@ FN:3,(anonymous_0)
 FNF:1
 FNH:0
 FNDA:0,(anonymous_0)
+=======
+>>>>>>> 434e6bb24f70892e9ea5107b1895cc230c552cbe
 DA:3,1
 DA:4,0
 LF:2
@@ -1052,6 +1078,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
+<<<<<<< HEAD
 SF:src\dto\genres.dto.ts
 FN:3,(anonymous_0)
 FNF:1
@@ -1301,11 +1328,14 @@ BRF:2
 BRH:0
 end_of_record
 TN:
+=======
+>>>>>>> 434e6bb24f70892e9ea5107b1895cc230c552cbe
 SF:src\routes\authRoutes.ts
 FNF:0
 FNH:0
 DA:1,1
 DA:2,1
+<<<<<<< HEAD
 DA:3,1
 DA:9,1
 DA:11,1
@@ -1357,6 +1387,13 @@ DA:37,1
 DA:45,1
 LF:13
 LH:13
+=======
+DA:4,1
+DA:6,1
+DA:8,1
+LF:5
+LH:5
+>>>>>>> 434e6bb24f70892e9ea5107b1895cc230c552cbe
 BRF:0
 BRH:0
 end_of_record
@@ -1366,6 +1403,7 @@ FNF:0
 FNH:0
 DA:1,1
 DA:2,1
+<<<<<<< HEAD
 DA:3,1
 DA:4,1
 DA:5,1
@@ -2465,5 +2503,13 @@ BRDA:124,4,0,0
 BRDA:137,5,0,0
 BRDA:151,6,0,0
 BRF:9
+=======
+DA:4,1
+DA:6,1
+DA:8,1
+LF:5
+LH:5
+BRF:0
+>>>>>>> 434e6bb24f70892e9ea5107b1895cc230c552cbe
 BRH:0
 end_of_record

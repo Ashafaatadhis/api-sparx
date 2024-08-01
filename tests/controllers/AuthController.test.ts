@@ -1,5 +1,6 @@
 import request from "supertest";
 import app from "@/app";
+import { login } from "@/controllers/authController";
 describe("COBA TEST", () => {
   describe("POST", () => {
     it("SHOULD BE TRUE", async () => {
