@@ -6,17 +6,26 @@ const seed = async () => {
   await prisma.user.create({
     data: {
       email: "admin@gmail.com",
-      username: "admin123",
+      username: "admin",
       password: (genPassword && genPassword) as string,
       role: "ADMIN",
     },
   });
 
-  genPassword = await hashPassword("user1");
+  genPassword = await hashPassword("testing123");
   await prisma.user.create({
     data: {
-      email: "user1@gmail.com",
-      username: "user1",
+      email: "testing1@gmail.com",
+      username: "testing1",
+      password: (genPassword && genPassword) as string,
+      role: "USER",
+    },
+  });
+  genPassword = await hashPassword("testing123");
+  await prisma.user.create({
+    data: {
+      email: "testing2@gmail.com",
+      username: "testing2",
       password: (genPassword && genPassword) as string,
       role: "USER",
     },

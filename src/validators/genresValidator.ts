@@ -1,0 +1,38 @@
+import { NextFunction, Request, Response } from "express";
+import { check, matchedData, validationResult } from "express-validator";
+
+const postValidationRules = () => {
+  return [
+    check("genreName")
+      .isString()
+      .trim()
+      .escape()
+      .not()
+      .isEmpty()
+      .withMessage("genreName is required"),
+  ];
+};
+
+const editValidationRules = () => {
+  return [
+    check("genreName")
+      .isString()
+      .trim()
+      .escape()
+      .not()
+      .isEmpty()
+      .withMessage("GenreName is required"),
+  ];
+};
+
+const validate = (req: Request, res: Response, next: NextFunction) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(500).json({ status: 500, errors: errors.array() });
+  }
+
+  req.body = matchedData(req, { onlyValidData: true });
+  next();
+};
+
+export { editValidationRules, postValidationRules, validate };

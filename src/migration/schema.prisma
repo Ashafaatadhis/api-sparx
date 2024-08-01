@@ -16,7 +16,7 @@ enum Role {
 
 model User {
   id       Int    @id @default(autoincrement())
-  username String @unique
+  username String 
   password String
   email    String
   role     Role  
@@ -24,10 +24,29 @@ model User {
   updatedAt  DateTime  @default(now())
   deletedAt  DateTime?
 
-  song Song[]
+  song Song[] 
   playlist Playlist[]
   downloadPermission DownloadPermission[]
+
+  @@unique([username, deletedAt])
 }
+
+model DownloadPermission {
+  id         Int    @id @default(autoincrement())
+  userId     Int
+  songId     Int?  
+  playlistId Int?  
+  format     String
+  User       User     @relation(fields: [userId], references: [id],onDelete: Cascade, onUpdate: Cascade)
+  Song       Song?    @relation(fields: [songId], references: [id],onDelete: Cascade, onUpdate: Cascade)
+  Playlist   Playlist? @relation(fields: [playlistId], references: [id],onDelete: Cascade, onUpdate: Cascade)
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @default(now())
+  deletedAt  DateTime?
+
+  @@unique([userId, songId, playlistId, deletedAt])
+}
+
 
 model Genre {
   id       Int    @id @default(autoincrement())
@@ -45,7 +64,7 @@ model SubGenre {
   id          Int    @id @default(autoincrement())
   subGenreName String
   genreId     Int
-  Genre       Genre  @relation(fields: [genreId], references: [id])
+  Genre       Genre  @relation(fields: [genreId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   createdAt  DateTime  @default(now())
   updatedAt  DateTime  @default(now())
   deletedAt  DateTime?
@@ -60,59 +79,48 @@ model Song {
   singer      String
   coverSong   String?
   genreId     Int
-  subGenreId  Int
-  bpm         Int
-  tempo       String
+  subGenreId  Int?
+  bpm         Int?
+  tempo       String?
   vocal       Boolean
   duration    Int
   filePath    String
   uploadedBy  Int
-  Genre       Genre   @relation(fields: [genreId], references: [id])
-  SubGenre    SubGenre @relation(fields: [subGenreId], references: [id])
-  User        User    @relation(fields: [uploadedBy], references: [id])
+  Genre       Genre   @relation(fields: [genreId], references: [id],onDelete: Cascade, onUpdate: Cascade)
+  SubGenre    SubGenre? @relation(fields: [subGenreId], references: [id],onDelete: Cascade, onUpdate: Cascade)
+  User        User    @relation(fields: [uploadedBy], references: [id],onDelete: Cascade, onUpdate: Cascade)
   createdAt  DateTime  @default(now())
   updatedAt  DateTime  @default(now())
   deletedAt  DateTime?
 
   playlistSong PlaylistSong[]
-  downloadPermission DownloadPermission?
+  downloadPermission DownloadPermission[]
 }
+
+
 
 model Playlist {
   id          Int    @id @default(autoincrement())
   playlistName String
   createdBy   Int
   isPublic    Boolean
-  User        User   @relation(fields: [createdBy], references: [id])
+  User        User   @relation(fields: [createdBy], references: [id],onDelete: Cascade, onUpdate: Cascade)
   createdAt  DateTime  @default(now())
   updatedAt  DateTime  @default(now())
   deletedAt  DateTime?
 
   playlistSong PlaylistSong[]
-  downloadPermission DownloadPermission?
+  downloadPermission DownloadPermission[]
 }
 
 model PlaylistSong {
   id         Int    @id @default(autoincrement())
   playlistId Int
   songId     Int
-  Playlist   Playlist @relation(fields: [playlistId], references: [id])
-  Song       Song     @relation(fields: [songId], references: [id])
+  Playlist   Playlist @relation(fields: [playlistId], references: [id],onDelete: Cascade, onUpdate: Cascade)
+  Song       Song     @relation(fields: [songId], references: [id],onDelete: Cascade, onUpdate: Cascade)
   createdAt  DateTime  @default(now())
   updatedAt  DateTime  @default(now())
   deletedAt  DateTime?
 }
 
-model DownloadPermission {
-  id         Int    @id @default(autoincrement())
-  userId     Int
-  songId     Int? @unique
-  playlistId Int? @unique
-  format     String
-  User       User     @relation(fields: [userId], references: [id])
-  Song       Song?    @relation(fields: [songId], references: [id])
-  Playlist   Playlist? @relation(fields: [playlistId], references: [id])
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @default(now())
-  deletedAt  DateTime?
-}
