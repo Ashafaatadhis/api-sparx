@@ -43,7 +43,7 @@ export const login = async (req: Request, res: Response) => {
     if (!user) {
       logger.error("Login Error: Invalid username or password");
       return res
-        .status(400)
+        .status(401)
         .json({ status: 401, message: "Invalid username or password" });
     }
     const token = sign(user);

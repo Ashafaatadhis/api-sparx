@@ -13,13 +13,13 @@ prisma.$use(async (params: any, next) => {
     // Tambahkan filter untuk mengambil data yang belum dihapus (deletedAt = null)
     params.args.where.deletedAt = null;
   }
-  if (params.action == "delete") {
+  if (params.action == "delete" && !params.args.ignoreMiddleware) {
     // Delete queries
     // Change action to an update
     params.action = "update";
     params.args["data"] = { deletedAt: new Date().toISOString() };
   }
-  if (params.action == "deleteMany") {
+  if (params.action == "deleteMany" && !params.args.ignoreMiddleware) {
     // Delete many queries
     params.action = "updateMany";
     if (params.args.data != undefined) {

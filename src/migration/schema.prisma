@@ -1,6 +1,5 @@
 generator client {
   provider = "prisma-client-js"
-  
 }
 
 datasource db {
@@ -9,118 +8,120 @@ datasource db {
   shadowDatabaseUrl = env("SHADOW_URL")
 }
 
-enum Role {
-  ADMIN
-  USER
-}
-
 model User {
-  id       Int    @id @default(autoincrement())
-  username String 
-  password String
-  email    String
-  role     Role  
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @default(now())
-  deletedAt  DateTime?
-
-  song Song[] 
-  playlist Playlist[]
+  id                 Int                  @id @default(autoincrement())
+  username           String
+  password           String
+  email              String
+  role               Role
+  createdAt          DateTime             @default(now())
+  updatedAt          DateTime             @default(now())
+  deletedAt          DateTime?
   downloadPermission DownloadPermission[]
+  playlist           Playlist[]
+  song               Song[]
 
   @@unique([username, deletedAt])
 }
 
 model DownloadPermission {
-  id         Int    @id @default(autoincrement())
+  id         Int       @id @default(autoincrement())
   userId     Int
-  songId     Int?  
-  playlistId Int?  
+  songId     Int?
+  playlistId Int?
   format     String
-  User       User     @relation(fields: [userId], references: [id],onDelete: Cascade, onUpdate: Cascade)
-  Song       Song?    @relation(fields: [songId], references: [id],onDelete: Cascade, onUpdate: Cascade)
-  Playlist   Playlist? @relation(fields: [playlistId], references: [id],onDelete: Cascade, onUpdate: Cascade)
   createdAt  DateTime  @default(now())
   updatedAt  DateTime  @default(now())
   deletedAt  DateTime?
+  Playlist   Playlist? @relation(fields: [playlistId], references: [id], onDelete: Cascade)
+  Song       Song?     @relation(fields: [songId], references: [id], onDelete: Cascade)
+  User       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, songId, playlistId, deletedAt])
+  @@index([playlistId], map: "DownloadPermission_playlistId_fkey")
+  @@index([songId], map: "DownloadPermission_songId_fkey")
 }
 
-
 model Genre {
-  id       Int    @id @default(autoincrement())
+  id        Int        @id @default(autoincrement())
   genreName String
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @default(now())
-  deletedAt  DateTime?
-
-  subGenre SubGenre[]
-  song Song[]
- 
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @default(now())
+  deletedAt DateTime?
+  song      Song[]
+  subGenre  SubGenre[]
 }
 
 model SubGenre {
-  id          Int    @id @default(autoincrement())
+  id           Int       @id @default(autoincrement())
   subGenreName String
-  genreId     Int
-  Genre       Genre  @relation(fields: [genreId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @default(now())
-  deletedAt  DateTime?
+  genreId      Int
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @default(now())
+  deletedAt    DateTime?
+  song         Song[]
+  Genre        Genre     @relation(fields: [genreId], references: [id], onDelete: Cascade)
 
-  song Song[]
-
+  @@index([genreId], map: "SubGenre_genreId_fkey")
 }
 
 model Song {
-  id          Int    @id @default(autoincrement())
-  title       String
-  singer      String
-  coverSong   String?
-  genreId     Int
-  subGenreId  Int?
-  bpm         Int?
-  tempo       String?
-  vocal       Boolean
-  duration    Int
-  filePath    String
-  uploadedBy  Int
-  Genre       Genre   @relation(fields: [genreId], references: [id],onDelete: Cascade, onUpdate: Cascade)
-  SubGenre    SubGenre? @relation(fields: [subGenreId], references: [id],onDelete: Cascade, onUpdate: Cascade)
-  User        User    @relation(fields: [uploadedBy], references: [id],onDelete: Cascade, onUpdate: Cascade)
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @default(now())
-  deletedAt  DateTime?
-
-  playlistSong PlaylistSong[]
+  id                 Int                  @id @default(autoincrement())
+  title              String
+  singer             String
+  coverSong          String?
+  genreId            Int
+  subGenreId         Int?
+  bpm                Int?
+  tempo              String?
+  vocal              Boolean
+  duration           Int
+  filePath           String
+  uploadedBy         Int
+  createdAt          DateTime             @default(now())
+  updatedAt          DateTime             @default(now())
+  deletedAt          DateTime?
   downloadPermission DownloadPermission[]
+  playlistSong       PlaylistSong[]
+  Genre              Genre                @relation(fields: [genreId], references: [id], onDelete: Cascade)
+  SubGenre           SubGenre?            @relation(fields: [subGenreId], references: [id], onDelete: Cascade)
+  User               User                 @relation(fields: [uploadedBy], references: [id], onDelete: Cascade)
+
+  @@index([genreId], map: "Song_genreId_fkey")
+  @@index([subGenreId], map: "Song_subGenreId_fkey")
+  @@index([uploadedBy], map: "Song_uploadedBy_fkey")
 }
 
-
-
 model Playlist {
-  id          Int    @id @default(autoincrement())
-  playlistName String
-  createdBy   Int
-  isPublic    Boolean
-  User        User   @relation(fields: [createdBy], references: [id],onDelete: Cascade, onUpdate: Cascade)
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @default(now())
-  deletedAt  DateTime?
-
-  playlistSong PlaylistSong[]
+  id                 Int                  @id @default(autoincrement())
+  playlistName       String
+  createdBy          Int
+  isPublic           Boolean
+  createdAt          DateTime             @default(now())
+  updatedAt          DateTime             @default(now())
+  deletedAt          DateTime?
   downloadPermission DownloadPermission[]
+  User               User                 @relation(fields: [createdBy], references: [id], onDelete: Cascade)
+  playlistSong       PlaylistSong[]
+
+  @@index([createdBy], map: "Playlist_createdBy_fkey")
 }
 
 model PlaylistSong {
-  id         Int    @id @default(autoincrement())
+  id         Int       @id @default(autoincrement())
   playlistId Int
   songId     Int
-  Playlist   Playlist @relation(fields: [playlistId], references: [id],onDelete: Cascade, onUpdate: Cascade)
-  Song       Song     @relation(fields: [songId], references: [id],onDelete: Cascade, onUpdate: Cascade)
   createdAt  DateTime  @default(now())
   updatedAt  DateTime  @default(now())
   deletedAt  DateTime?
+  Playlist   Playlist  @relation(fields: [playlistId], references: [id], onDelete: Cascade)
+  Song       Song      @relation(fields: [songId], references: [id], onDelete: Cascade)
+
+  @@index([playlistId], map: "PlaylistSong_playlistId_fkey")
+  @@index([songId], map: "PlaylistSong_songId_fkey")
 }
 
+enum Role {
+  ADMIN
+  USER
+}
