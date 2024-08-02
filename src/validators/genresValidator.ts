@@ -21,7 +21,7 @@ const editValidationRules = () => {
       .escape()
       .not()
       .isEmpty()
-      .withMessage("GenreName is required"),
+      .withMessage("genreName is required"),
   ];
 };
 
