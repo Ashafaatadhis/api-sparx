@@ -21,6 +21,7 @@ export const getAllController = async (req: Request, res: Response) => {
       }),
     });
   } catch (err: any) {
+    console.log(err);
     logger.error("Get All Error: Failed to Get All Genres");
     return res
       .status(500)
