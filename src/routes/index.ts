@@ -1,4 +1,3 @@
-import "module-alias/register";
 import express from "express";
 import authRoutes from "@/routes/authRoutes";
 import genresRoutes from "@/routes/genresRoutes";
