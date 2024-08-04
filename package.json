@@ -11,7 +11,7 @@
   "scripts": {
     "postinstall": "npx prisma generate",
     "build": "npx tsc && npx tsc-alias",
-    "start": "node ./dist/src/server.js",
+    "start": "ts-node server.ts",
     "dev": "nodemon src/server.ts",
     "prisma:generate": "npx prisma generate --schema=./src/migration/schema.prisma",
     "db:push": "npx prisma db push --schema=./src/migration/schema.prisma",
