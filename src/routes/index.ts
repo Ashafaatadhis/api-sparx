@@ -1,6 +1,6 @@
 import express from "express";
 import authRoutes from "@/routes/authRoutes";
-import genresRoutes from "@/routes/genresRoutes";
+import genresRoutes from "./genresRoutes";
 import subGenresRoutes from "@/routes/subGenresRoutes";
 import songRoutes from "@/routes/songRoutes";
 import playlistRoutes from "@/routes/playlistRoutes";
