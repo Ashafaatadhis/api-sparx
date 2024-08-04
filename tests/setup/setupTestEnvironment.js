@@ -1,4 +1,4 @@
 beforeAll(async () => {
   //
-  console.log("CHECK before");
+  // console.log("CHECK before");
 });
