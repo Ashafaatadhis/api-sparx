@@ -1,7 +1,7 @@
 {
   "name": "api-sparx",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "server.js",
   "_moduleAliases": {
     "@": "src"
   },
@@ -11,7 +11,7 @@
   "scripts": {
     "postinstall": "npx prisma generate --schema=./src/migration/schema.prisma",
     "build": "npx tsc && npx tsc-alias",
-    "start": "ts-node index.ts",
+    "start": "ts-node server.ts",
     "dev": "nodemon src/server.ts",
     "prisma:generate": "npx prisma generate --schema=./src/migration/schema.prisma",
     "db:push": "npx prisma db push --schema=./src/migration/schema.prisma",
