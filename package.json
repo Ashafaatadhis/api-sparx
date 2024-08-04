@@ -9,6 +9,7 @@
     "seed": "ts-node src/migration/seed.ts"
   },
   "scripts": {
+    "postinstall": "npx prisma generate",
     "build": "npx tsc && npx tsc-alias",
     "start": "node ./dist/src/server.js",
     "dev": "nodemon src/server.ts",
