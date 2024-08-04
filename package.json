@@ -9,9 +9,9 @@
     "seed": "ts-node src/migration/seed.ts"
   },
   "scripts": {
-    "postinstall": "npx prisma generate",
+    "postinstall": "npx prisma generate --schema=./src/migration/schema.prisma",
     "build": "npx tsc && npx tsc-alias",
-    "start": "node dist/src/server.js",
+    "start": "ts-node index.ts",
     "dev": "nodemon src/server.ts",
     "prisma:generate": "npx prisma generate --schema=./src/migration/schema.prisma",
     "db:push": "npx prisma db push --schema=./src/migration/schema.prisma",
