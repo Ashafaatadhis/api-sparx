@@ -3,13 +3,13 @@ import {
   getAll,
   getAllSong,
   getDetail,
-} from "@/services/publicPlaylistService";
+} from "../services/publicPlaylistService";
 
 import {
   responsePublicPlaylist,
   responsePublicPlaylistSong,
-} from "@/dto/publicPlaylist.dto";
-import logger from "@/utils/logger";
+} from "../dto/publicPlaylist.dto";
+import logger from "../utils/logger";
 
 export const getAllController = async (req: Request, res: Response) => {
   try {

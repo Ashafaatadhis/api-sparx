@@ -5,15 +5,15 @@ import {
   deleteController,
   getAllController,
   getDetailController,
-} from "@/controllers/userController";
+} from "../controllers/userController";
 import {
   postValidationRules,
   validate,
   editValidationRules,
   checkUserIsExist,
-} from "@/validators/userValidator";
-import { authentication } from "@/middlewares/authMiddleware";
-import rbacMiddleware from "@/middlewares/rbacMiddleware";
+} from "../validators/userValidator";
+import { authentication } from "../middlewares/authMiddleware";
+import rbacMiddleware from "../middlewares/rbacMiddleware";
 
 const router = express.Router();
 

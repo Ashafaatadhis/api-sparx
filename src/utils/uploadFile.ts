@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 
-import cloudinary from "@/config/cloudinary";
+import cloudinary from "../config/cloudinary";
 import streamifier from "streamifier";
 import fileUpload from "express-fileupload";
 

@@ -5,10 +5,10 @@ import {
   editData,
   deleteData,
   getDetail,
-} from "@/services/subGenresServices";
+} from "../services/subGenresServices";
 
-import { responseSubGenre } from "@/dto/subGenres.dto";
-import logger from "@/utils/logger";
+import { responseSubGenre } from "../dto/subGenres.dto";
+import logger from "../utils/logger";
 
 export const getAllController = async (req: Request, res: Response) => {
   try {

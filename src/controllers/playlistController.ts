@@ -8,13 +8,13 @@ import {
   insertDataSongToPlaylist,
   getDataSongInPlaylist,
   deleteSongInPlaylist,
-} from "@/services/playlistServices";
+} from "../services/playlistServices";
 
-import { responsePlaylist, responsePlaylistSong } from "@/dto/playlist.dto";
-import logger from "@/utils/logger";
-import { RequestCustom } from "@/middlewares/authMiddleware";
+import { responsePlaylist, responsePlaylistSong } from "../dto/playlist.dto";
+import logger from "../utils/logger";
+import { RequestCustom } from "../middlewares/authMiddleware";
 
-import playlistPolicy from "@/policy/playlistPolicy";
+import playlistPolicy from "../policy/playlistPolicy";
 
 export const getAllController = async (req: RequestCustom, res: Response) => {
   try {

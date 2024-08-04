@@ -1,11 +1,11 @@
 import { Request, response, Response } from "express";
-import logger from "@/utils/logger";
+import logger from "../utils/logger";
 import {
   register as registerService,
   login as loginService,
-} from "@/services/authServices";
-import { sign } from "@/utils/jwt";
-import { responseUser } from "@/dto/user.dto";
+} from "../services/authServices";
+import { sign } from "../utils/jwt";
+import { responseUser } from "../dto/user.dto";
 
 export const register = async (req: Request, res: Response) => {
   try {

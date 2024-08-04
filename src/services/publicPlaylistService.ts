@@ -1,5 +1,4 @@
-import prisma from "@/config/prisma";
-
+import prisma from "../config/prisma";
 export const getAll = async () => {
   const result = await prisma.playlist.findMany({
     include: {

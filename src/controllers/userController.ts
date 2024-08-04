@@ -1,14 +1,14 @@
 import { Request, response, Response } from "express";
-import logger from "@/utils/logger";
+import logger from "../utils/logger";
 import {
   createNewUser,
   deleteUser,
   editUser,
   getAllUser,
   getDetailUser,
-} from "@/services/userServices";
+} from "../services/userServices";
 
-import { responseUser } from "@/dto/user.dto";
+import { responseUser } from "../dto/user.dto";
 
 export const postController = async (req: Request, res: Response) => {
   try {

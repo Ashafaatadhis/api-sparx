@@ -6,16 +6,16 @@ import {
   postController,
   postPlaylistController,
   updateController,
-} from "@/controllers/playlistController";
-import { authentication } from "@/middlewares/authMiddleware";
+} from "../controllers/playlistController";
+import { authentication } from "../middlewares/authMiddleware";
 
-import { validate } from "@/validators/authValidator";
+import { validate } from "../validators/authValidator";
 import {
   postValidationRules,
   editValidationRules,
   postSongToPlaylistValidationRules,
-} from "@/validators/playlistValidator";
-import { checkAudio, checkImage } from "@/middlewares/songMiddleware";
+} from "../validators/playlistValidator";
+import { checkAudio, checkImage } from "../middlewares/songMiddleware";
 import express from "express";
 
 const router = express.Router();

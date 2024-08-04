@@ -1,4 +1,4 @@
-import prisma from "@/config/prisma";
+import prisma from "../config/prisma";
 import { Playlist, PlaylistSong } from "@prisma/client";
 
 export const getAllByUserId = async (id: number) => {

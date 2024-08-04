@@ -1,4 +1,4 @@
-import { IPayload } from "@/utils/jwt";
+import { IPayload } from "../utils/jwt";
 import { Playlist } from "@prisma/client";
 
 export default (user: IPayload, playlist: Playlist) => {

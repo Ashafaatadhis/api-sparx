@@ -4,15 +4,15 @@ import {
   getDetailController,
   postController,
   updateController,
-} from "@/controllers/songController";
-import { authentication } from "@/middlewares/authMiddleware";
-import rbacMiddleware from "@/middlewares/rbacMiddleware";
-import { validate } from "@/validators/authValidator";
+} from "../controllers/songController";
+import { authentication } from "../middlewares/authMiddleware";
+import rbacMiddleware from "../middlewares/rbacMiddleware";
+import { validate } from "../validators/authValidator";
 import {
   postValidationRules,
   editValidationRules,
-} from "@/validators/songValidator";
-import { checkAudio, checkImage } from "@/middlewares/songMiddleware";
+} from "../validators/songValidator";
+import { checkAudio, checkImage } from "../middlewares/songMiddleware";
 import express from "express";
 
 const router = express.Router();

@@ -4,14 +4,14 @@ import {
   getDetailController,
   postController,
   updateController,
-} from "@/controllers/subGenresController";
-import { authentication } from "@/middlewares/authMiddleware";
-import rbacMiddleware from "@/middlewares/rbacMiddleware";
-import { validate } from "@/validators/authValidator";
+} from "../controllers/subGenresController";
+import { authentication } from "../middlewares/authMiddleware";
+import rbacMiddleware from "../middlewares/rbacMiddleware";
+import { validate } from "../validators/authValidator";
 import {
   postValidationRules,
   editValidationRules,
-} from "@/validators/subGenresValidator";
+} from "../validators/subGenresValidator";
 import express from "express";
 
 const router = express.Router();

@@ -4,16 +4,16 @@ import {
   getDetailController,
   postController,
   updateController,
-} from "@/controllers/downloadPermissionController";
-import { authentication } from "@/middlewares/authMiddleware";
-import rbacMiddleware from "@/middlewares/rbacMiddleware";
+} from "../controllers/downloadPermissionController";
+import { authentication } from "../middlewares/authMiddleware";
+import rbacMiddleware from "../middlewares/rbacMiddleware";
 import {
   validate,
   editValidationRules,
   postValidationRules,
   checkDuplicateEntry,
   checkDuplicateEntryOnUpdate,
-} from "@/validators/downloadPermissionvalidator";
+} from "../validators/downloadPermissionvalidator";
 
 import express from "express";
 

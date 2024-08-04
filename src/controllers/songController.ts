@@ -5,12 +5,12 @@ import {
   editData,
   deleteData,
   getDetail,
-} from "@/services/songServices";
-import { responseSong } from "@/dto/song.dto";
-import logger from "@/utils/logger";
-import { RequestCustom } from "@/middlewares/authMiddleware";
-import { uploadSingle } from "@/utils/uploadFile";
-import deleteFile from "@/utils/deleteFiles";
+} from "../services/songServices";
+import { responseSong } from "../dto/song.dto";
+import logger from "../utils/logger";
+import { RequestCustom } from "../middlewares/authMiddleware";
+import { uploadSingle } from "../utils/uploadFile";
+import deleteFile from "../utils/deleteFiles";
 
 export const getAllController = async (req: Request, res: Response) => {
   try {

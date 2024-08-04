@@ -1,12 +1,12 @@
 import express from "express";
-import authRoutes from "@/routes/authRoutes";
-import genresRoutes from "@/routes/genresRoutes";
-import subGenresRoutes from "@/routes/subGenresRoutes";
-import songRoutes from "@/routes/songRoutes";
-import playlistRoutes from "@/routes/playlistRoutes";
-import publicPlaylistRoutes from "@/routes/publicPlaylistRoutes";
-import downloadPerissionRoutes from "@/routes/downloadPermissionRoutes";
-import userRoutes from "@/routes/userRoutes";
+import authRoutes from "../routes/authRoutes";
+import genresRoutes from "../routes/genresRoutes";
+import subGenresRoutes from "../routes/subGenresRoutes";
+import songRoutes from "../routes/songRoutes";
+import playlistRoutes from "../routes/playlistRoutes";
+import publicPlaylistRoutes from "../routes/publicPlaylistRoutes";
+import downloadPerissionRoutes from "../routes/downloadPermissionRoutes";
+import userRoutes from "../routes/userRoutes";
 
 const router = express.Router();
 

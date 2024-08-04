@@ -6,10 +6,10 @@ import {
   getDetail,
   editData,
   deleteData,
-} from "@/services/downloadPermissionService";
+} from "../services/downloadPermissionService";
 
-import logger from "@/utils/logger";
-import { responseDownloadPermission } from "@/dto/downloadPermission.dto";
+import logger from "../utils/logger";
+import { responseDownloadPermission } from "../dto/downloadPermission.dto";
 
 export const getAllController = async (req: Request, res: Response) => {
   try {

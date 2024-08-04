@@ -1,4 +1,4 @@
-import prisma from "@/config/prisma";
+import prisma from "../config/prisma";
 import { NextFunction, Request, Response } from "express";
 import { check, matchedData, validationResult } from "express-validator";
 

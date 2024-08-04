@@ -1,4 +1,4 @@
-import prisma from "@/config/prisma";
+import prisma from "../config/prisma";
 import { DownloadPermission } from "@prisma/client";
 
 export const getAll = async () => {

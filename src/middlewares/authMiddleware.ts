@@ -1,6 +1,6 @@
 import { User } from "@prisma/client";
 import { NextFunction, Request, Response } from "express";
-import type { IPayload } from "@/utils/jwt";
+import type { IPayload } from "../utils/jwt";
 
 const { verify } = require("../utils/jwt");
 

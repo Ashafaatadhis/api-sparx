@@ -1,6 +1,6 @@
-import prisma from "@/config/prisma";
+import prisma from "../config/prisma";
 
-import { hashPassword, verifyPassword } from "@/utils/hashPassword";
+import { hashPassword, verifyPassword } from "../utils/hashPassword";
 import { User } from "@prisma/client";
 
 export const createNewUser = async (data: User) => {

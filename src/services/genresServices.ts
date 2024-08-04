@@ -1,4 +1,4 @@
-import prisma from "@/config/prisma";
+import prisma from "../config/prisma";
 import { Genre } from "@prisma/client";
 
 export const getAll = async () => {

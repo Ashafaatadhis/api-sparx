@@ -2,7 +2,7 @@ import {
   getAllController,
   getAllSongController,
   getDetailController,
-} from "@/controllers/publicPlaylistController";
+} from "../controllers/publicPlaylistController";
 
 import express from "express";
 
