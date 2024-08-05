@@ -3,6 +3,7 @@ import app from "@/app";
 import prisma from "@/config/prisma";
 import cookie from "cookie";
 import { hashPassword } from "@/utils/hashPassword";
+import { deleteUser } from "./AuthController.test";
 
 const TEST_USER = process.env.TEST_USER;
 const TEST_EMAIL = process.env.TEST_EMAIL;
@@ -10,6 +11,18 @@ const TEST_PASSWORD = process.env.TEST_PASSWORD;
 const TEST_USER_ADMIN = process.env.TEST_USER_ADMIN;
 const TEST_EMAIL_ADMIN = process.env.TEST_EMAIL_ADMIN;
 const TEST_PASSWORD_ADMIN = process.env.TEST_PASSWORD_ADMIN;
+
+export const deleteGenre = async () => {
+  try {
+    const result =
+      await prisma.$queryRaw`DELETE FROM Genre WHERE genreName = 'testgenre'`;
+
+    return result;
+  } catch (err: any) {
+    console.log("ERR", err.message);
+    return null;
+  }
+};
 
 describe("Genres Controller", () => {
   const registerAndLoginUser = async () => {
@@ -48,28 +61,7 @@ describe("Genres Controller", () => {
     });
     return result;
   };
-  const deleteUser = async () => {
-    try {
-      const result =
-        await prisma.$queryRaw`DELETE FROM user WHERE username = ${TEST_USER}`;
 
-      return result;
-    } catch (err: any) {
-      console.log("ERR", err.message);
-      return null;
-    }
-  };
-  const deleteGenre = async () => {
-    try {
-      const result =
-        await prisma.$queryRaw`DELETE FROM genre WHERE genreName = 'testgenre'`;
-
-      return result;
-    } catch (err: any) {
-      console.log("ERR", err.message);
-      return null;
-    }
-  };
   beforeEach(async () => {
     // await deleteUserByUsername("admin");
     await deleteUser();

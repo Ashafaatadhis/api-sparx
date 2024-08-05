@@ -8,6 +8,18 @@ const TEST_USER = process.env.TEST_USER;
 const TEST_EMAIL = process.env.TEST_EMAIL;
 const TEST_PASSWORD = process.env.TEST_PASSWORD;
 
+export const deleteUser = async () => {
+  try {
+    const result =
+      await prisma.$queryRaw`DELETE FROM User WHERE username = ${TEST_USER}`;
+
+    return result;
+  } catch (err: any) {
+    console.log("ERR", err.message);
+    return null;
+  }
+};
+
 describe("Auth Controller", () => {
   const createUser = async () => {
     const result = await prisma.user.create({
@@ -20,17 +32,7 @@ describe("Auth Controller", () => {
     });
     return result;
   };
-  const deleteUser = async () => {
-    try {
-      const result =
-        await prisma.$queryRaw`DELETE FROM user WHERE username = ${TEST_USER}`;
 
-      return result;
-    } catch (err: any) {
-      console.log("ERR", err.message);
-      return null;
-    }
-  };
   beforeEach(async () => {
     // await deleteUserByUsername("admin");
     await deleteUser();

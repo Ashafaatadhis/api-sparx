@@ -46,7 +46,7 @@ export const getDetail = async (id: string) => {
   return result;
 };
 export const getAllSong = async (id: string) => {
-  const result = await prisma.playlistSong.findFirst({
+  const result = await prisma.playlistSong.findMany({
     include: {
       Playlist: true,
       Song: true,

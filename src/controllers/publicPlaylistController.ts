@@ -54,7 +54,9 @@ export const getAllSongController = async (req: Request, res: Response) => {
     return res.status(200).json({
       status: 200,
       message: "Successfully retrieved songs in the playlist",
-      data: result ? responsePublicPlaylistSong(result) : null,
+      data: result.map((v) => {
+        return responsePublicPlaylistSong(v);
+      }),
     });
   } catch (err: any) {
     logger.info("Get Error: Failed to retrieve songs in the playlist");
