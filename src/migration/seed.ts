@@ -8,6 +8,8 @@ const seed = async () => {
   //   }
   // });
   // console.log(res);
+  const res = await prisma.$queryRaw`DELETE FROM Playlist WHERE id='3'`;
+  console.log(res);
   // await prisma.playlist.create({
   //   data: {
   //     isPublic: true,
