@@ -7,8 +7,20 @@ import playlistRoutes from "../routes/playlistRoutes";
 import publicPlaylistRoutes from "../routes/publicPlaylistRoutes";
 import downloadPerissionRoutes from "../routes/downloadPermissionRoutes";
 import userRoutes from "../routes/userRoutes";
-
+import cloudinary from "../config/cloudinary";
 const router = express.Router();
+
+// cloudinary purpose
+router.post("/signature", async (req, res) => {
+  const { public_id, timestamp } = req.body;
+
+  const signature = cloudinary.utils.api_sign_request(
+    { public_id, timestamp },
+    process.env.CLOUDINARY_API_SECRET as string
+  );
+
+  res.status(200).json({ signature });
+});
 
 router.use("/auth", authRoutes);
 router.use("/genres", genresRoutes);

@@ -8,8 +8,6 @@ const seed = async () => {
   //   }
   // });
   // console.log(res);
-  const res = await prisma.$queryRaw`DELETE FROM Playlist WHERE id='3'`;
-  console.log(res);
   // await prisma.playlist.create({
   //   data: {
   //     isPublic: true,
@@ -18,15 +16,15 @@ const seed = async () => {
   //   },
   // });
   // await prisma.user.deleteMany();
-  // let genPassword = await hashPassword("admin123");
-  // await prisma.user.create({
-  //   data: {
-  //     email: "admin@gmail.com",
-  //     username: "admin",
-  //     password: (genPassword && genPassword) as string,
-  //     role: "ADMIN",
-  //   },
-  // });
+  let genPassword = await hashPassword("admin123");
+  await prisma.user.create({
+    data: {
+      email: "admin@gmail.com",
+      username: "admin",
+      password: (genPassword && genPassword) as string,
+      role: "ADMIN",
+    },
+  });
   // genPassword = await hashPassword("testing123");
   // await prisma.user.create({
   //   data: {
