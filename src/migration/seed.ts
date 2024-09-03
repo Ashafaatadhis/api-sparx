@@ -43,18 +43,18 @@ const seed = async () => {
   //   }
   // });
   // console.log(res);
-  for (let i = 0; i < 20; i++) {
-    await prisma.playlist.create({
-      data: {
-        cover: "test",
-        description: `test${i + 1}`,
-        isPublic: true,
-        playlistName: `test${i + 1}`,
-        createdBy: 1,
-      },
-    });
-  }
-  // await prisma.$queryRaw`DELETE FROM Playlist`;
+  // for (let i = 0; i < 20; i++) {
+  //   await prisma.playlist.create({
+  //     data: {
+  //       cover: "test",
+  //       description: `test${i + 1}`,
+  //       isPublic: true,
+  //       playlistName: `test${i + 1}`,
+  //       createdBy: 1,
+  //     },
+  //   });
+  // }
+  await prisma.$queryRaw`DELETE FROM Playlist`;
   // await prisma.$queryRaw`DELETE FROM Song`;
   // await prisma.user.deleteMany();
   // let genPassword = await hashPassword("admin123");

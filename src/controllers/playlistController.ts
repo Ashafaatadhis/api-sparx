@@ -43,7 +43,7 @@ export const getAllController = async (req: RequestCustom, res: Response) => {
 
     const skip = (pageNumber - 1) * pageSizeNumber;
     const take = pageSizeNumber;
-
+    console.log(genreNumber, "AHOTY");
     if (!req?.user) {
       logger.error("Get All Error: User not Found");
       return res

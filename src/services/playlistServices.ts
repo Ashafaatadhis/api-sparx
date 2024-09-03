@@ -10,7 +10,7 @@ export const getAllByUserId = async (
 ) => {
   const result = await prisma.playlist.findMany({
     where: {
-      createdBy: id,
+      // createdBy: id,
       ...(genre > 0
         ? {
             playlistSong: {
@@ -19,6 +19,7 @@ export const getAllByUserId = async (
                   deletedAt: null,
                   genreId: genre,
                 },
+                deletedAt: null,
               },
             },
           }
@@ -62,10 +63,10 @@ export const getAllByUserId = async (
       },
     },
   });
-
+  console.log(genre, result);
   const count = await prisma.playlist.count({
     where: {
-      createdBy: id,
+      // createdBy: id,
       ...(genre > 0
         ? {
             playlistSong: {
@@ -74,6 +75,7 @@ export const getAllByUserId = async (
                   deletedAt: null,
                   genreId: genre,
                 },
+                deletedAt: null,
               },
             },
           }
@@ -87,6 +89,7 @@ export const getAllByUserId = async (
                   genreId: genre,
                   subGenreId: subgenre,
                 },
+                deletedAt: null,
               },
             },
           }
