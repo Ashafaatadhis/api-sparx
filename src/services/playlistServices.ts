@@ -33,6 +33,7 @@ export const getAllByUserId = async (
                   genreId: genre,
                   subGenreId: subgenre,
                 },
+                deletedAt: null,
               },
             },
           }
