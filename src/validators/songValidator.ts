@@ -11,6 +11,12 @@ const postValidationRules = () => {
       .not()
       .isEmpty()
       .withMessage("Title is required"),
+    check("filePath")
+      .isString()
+      .not()
+      .isEmpty()
+      .withMessage("filePath is required"),
+    check("tempo").isString().not().isEmpty().withMessage("tempo is required"),
     check("vocal")
       .not()
       .isEmpty()
@@ -22,16 +28,24 @@ const postValidationRules = () => {
       .isString()
       .trim()
       .escape()
-      .not()
-      .isEmpty()
-      .withMessage("Singer is required"),
+      // .not()
+      // .isEmpty()
+      // .withMessage("Singer is required")
+      .optional(),
     check("duration")
       .isNumeric()
       .withMessage("duration Should Numeric")
       .not()
       .isEmpty()
       .withMessage("duration is required")
-      .optional(),
+      .toInt(),
+    check("bpm")
+      .isNumeric()
+      .withMessage("bpm Should Numeric")
+      .not()
+      .isEmpty()
+      .withMessage("bpm is required")
+      .toInt(),
     check("genreId")
       .isNumeric()
       .withMessage("genreId Should Numeric")
@@ -85,13 +99,28 @@ const editValidationRules = () => {
       .not()
       .isEmpty()
       .withMessage("Title is required"),
+    check("filePath")
+      .isString()
+      .not()
+      .isEmpty()
+      .withMessage("filePath is required"),
+    check("tempo").isString().not().isEmpty().withMessage("tempo is required"),
     check("duration")
       .isNumeric()
       .withMessage("duration Should Numeric")
       .not()
       .isEmpty()
       .withMessage("duration is required")
-      .optional(),
+      .optional()
+      .toInt(),
+    check("bpm")
+      .isNumeric()
+      .withMessage("bpm Should Numeric")
+      .not()
+      .isEmpty()
+      .withMessage("bpm is required")
+      .optional()
+      .toInt(),
     check("vocal")
       .not()
       .isEmpty()
@@ -103,9 +132,10 @@ const editValidationRules = () => {
       .isString()
       .trim()
       .escape()
-      .not()
-      .isEmpty()
-      .withMessage("Singer is required"),
+      // .not()
+      // .isEmpty()
+      // .withMessage("Singer is required")
+      .optional(),
     check("genreId")
       .isNumeric()
       .withMessage("genreId Should Numeric")

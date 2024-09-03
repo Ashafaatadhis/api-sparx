@@ -1,9 +1,26 @@
 import prisma from "../config/prisma";
 import { Song } from "@prisma/client";
 
-export const getAll = async () => {
+export const getAll = async (
+  skip: number,
+  take: number,
+  genre: number,
+  subgenre: number
+) => {
   const result = await prisma.song.findMany({
+    skip,
+    take,
+    where: {
+      ...(genre > 0 ? { genreId: genre } : {}),
+      ...(subgenre > 0 ? { genreId: genre, subGenreId: subgenre } : {}),
+    },
     include: {
+      playlistSong: {
+        where: {
+          deletedAt: null,
+        },
+      },
+
       Genre: {
         select: {
           id: true,
@@ -18,7 +35,13 @@ export const getAll = async () => {
       },
     },
   });
-  return result;
+  const count = await prisma.song.count({
+    where: {
+      ...(genre > 0 ? { genreId: genre } : {}),
+      ...(subgenre > 0 ? { genreId: genre, subGenreId: subgenre } : {}),
+    },
+  });
+  return { result, count };
 };
 export const getDetail = async (id: string) => {
   const result = await prisma.song.findFirst({
@@ -26,6 +49,11 @@ export const getDetail = async (id: string) => {
       id: parseInt(id),
     },
     include: {
+      playlistSong: {
+        where: {
+          deletedAt: null,
+        },
+      },
       Genre: {
         select: {
           id: true,

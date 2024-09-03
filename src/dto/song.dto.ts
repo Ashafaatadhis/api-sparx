@@ -16,6 +16,27 @@ type SongWithGenreAndSubGenre = Prisma.SongGetPayload<{
     };
   };
 }>;
+type SongWithPlaylistsong = Prisma.SongGetPayload<{
+  include: {
+    playlistSong: {
+      where: {
+        deletedAt: null;
+      };
+    };
+    Genre: {
+      select: {
+        id: true;
+        genreName: true;
+      };
+    };
+    SubGenre: {
+      select: {
+        id: true;
+        subGenreName: true;
+      };
+    };
+  };
+}>;
 
 export const responseSong = (data: SongWithGenreAndSubGenre) => {
   return {
@@ -23,6 +44,34 @@ export const responseSong = (data: SongWithGenreAndSubGenre) => {
     title: data.title,
     singer: data.singer,
     coverSong: data.coverSong,
+    genre: {
+      id: data.Genre.id,
+      name: data.Genre.genreName,
+    },
+    subGenre: {
+      id: data.SubGenre?.id,
+      name: data.SubGenre?.subGenreName,
+    },
+
+    BPM: data.bpm,
+    tempo: data.tempo,
+    vocal: data.vocal,
+    duration: data.duration,
+    filePath: data.filePath,
+    uploadedBy: data.uploadedBy,
+    createdAt: data.createdAt,
+    updatedAt: data.updatedAt,
+    deletedAt: data.deletedAt,
+  };
+};
+
+export const responseSongWithPlaylistSong = (data: SongWithPlaylistsong) => {
+  return {
+    id: data.id,
+    title: data.title,
+    singer: data.singer,
+    coverSong: data.coverSong,
+    playlistsong: data.playlistSong,
     genre: {
       id: data.Genre.id,
       name: data.Genre.genreName,

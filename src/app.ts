@@ -13,7 +13,7 @@ const app: Express = express();
 app.use(cors());
 app.use(cookieParser());
 
-app.use(limiter);
+// app.use(limiter);
 app.use(
   fileUpload({
     limits: { fileSize: 10 * 1024 * 1024 }, // 50MB

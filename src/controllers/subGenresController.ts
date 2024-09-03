@@ -18,11 +18,11 @@ export const getAllController = async (req: Request, res: Response) => {
       status: 200,
       message: "Succesfully Get All Sub Genres",
       data: result.map((value) => {
-        console.log(value);
         return responseSubGenre(value);
       }),
     });
   } catch (err: any) {
+    console.log(err);
     logger.error("Get All Error: Failed to Get All Sub Genres");
     return res
       .status(500)

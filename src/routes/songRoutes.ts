@@ -12,19 +12,23 @@ import {
   postValidationRules,
   editValidationRules,
 } from "../validators/songValidator";
-import { checkAudio, checkImage } from "../middlewares/songMiddleware";
+import {
+  checkAudio,
+  checkImagePost,
+  checkImageUpdate,
+} from "../middlewares/songMiddleware";
 import express from "express";
 
 const router = express.Router();
 
-router.get("/", getAllController);
+router.get("/:genre?/:subgenre?/:genre?/:subgenre?", getAllController);
 router.get("/:id", getDetailController);
 router.post(
   "/",
   authentication(),
   rbacMiddleware(["ADMIN"], "create-genre"),
-  checkAudio("filePath", "POST"),
-  checkImage("coverSong"),
+  // checkAudio("filePath", "POST"),
+  checkImageUpdate("coverSong"),
   postValidationRules(),
   validate,
   postController
@@ -33,8 +37,8 @@ router.put(
   "/:id",
   authentication(),
   rbacMiddleware(["ADMIN"], "update-genre"),
-  checkAudio("filePath", "EDIT"),
-  checkImage("coverSong"),
+  // checkAudio("filePath", "EDIT"),
+  checkImageUpdate("coverSong"),
   editValidationRules(),
   validate,
   updateController

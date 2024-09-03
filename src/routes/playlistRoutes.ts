@@ -1,3 +1,4 @@
+import { checkImagePost, checkImageUpdate } from "@/middlewares/songMiddleware";
 import {
   deleteController,
   deletPlaylistSongController,
@@ -15,16 +16,17 @@ import {
   editValidationRules,
   postSongToPlaylistValidationRules,
 } from "../validators/playlistValidator";
-import { checkAudio, checkImage } from "../middlewares/songMiddleware";
+
 import express from "express";
 
 const router = express.Router();
 
-router.get("/", authentication(), getAllController);
+router.get("/:genre?/:subgenre?", authentication(), getAllController);
 router.get("/:id", authentication(), getDetailController);
 router.post(
   "/",
   authentication(),
+  checkImagePost("cover"),
   postValidationRules(),
   validate,
   postController
@@ -32,7 +34,7 @@ router.post(
 router.put(
   "/:id",
   authentication(),
-
+  checkImageUpdate("cover"),
   editValidationRules(),
   validate,
   updateController

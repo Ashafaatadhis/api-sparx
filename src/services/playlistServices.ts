@@ -1,19 +1,124 @@
 import prisma from "../config/prisma";
 import { Playlist, PlaylistSong } from "@prisma/client";
 
-export const getAllByUserId = async (id: number) => {
+export const getAllByUserId = async (
+  id: number,
+  skip: number,
+  take: number,
+  genre: number,
+  subgenre: number
+) => {
   const result = await prisma.playlist.findMany({
     where: {
       createdBy: id,
+      ...(genre > 0
+        ? {
+            playlistSong: {
+              some: {
+                Song: {
+                  deletedAt: null,
+                  genreId: genre,
+                },
+              },
+            },
+          }
+        : {}),
+      ...(subgenre > 0
+        ? {
+            playlistSong: {
+              some: {
+                Song: {
+                  deletedAt: null,
+                  genreId: genre,
+                  subGenreId: subgenre,
+                },
+              },
+            },
+          }
+        : {}),
+    },
+    skip,
+    take,
+    include: {
+      playlistSong: {
+        include: {
+          Song: true,
+        },
+        where: {
+          Song: {
+            deletedAt: null,
+          },
+          deletedAt: null,
+        },
+      },
+      _count: {
+        select: {
+          playlistSong: {
+            where: {
+              deletedAt: null,
+            },
+          },
+        },
+      },
     },
   });
-  return result;
+
+  const count = await prisma.playlist.count({
+    where: {
+      createdBy: id,
+      ...(genre > 0
+        ? {
+            playlistSong: {
+              some: {
+                Song: {
+                  deletedAt: null,
+                  genreId: genre,
+                },
+              },
+            },
+          }
+        : {}),
+      ...(subgenre > 0
+        ? {
+            playlistSong: {
+              some: {
+                Song: {
+                  deletedAt: null,
+                  genreId: genre,
+                  subGenreId: subgenre,
+                },
+              },
+            },
+          }
+        : {}),
+    },
+  });
+  return { count, result };
 };
 export const getDetailByUserId = async (id: string, userId: number) => {
   const result = await prisma.playlist.findFirst({
     where: {
       id: parseInt(id),
       createdBy: userId,
+    },
+    include: {
+      playlistSong: {
+        include: {
+          Song: true,
+        },
+        where: {
+          deletedAt: null,
+        },
+      },
+      _count: {
+        select: {
+          playlistSong: {
+            where: {
+              deletedAt: null,
+            },
+          },
+        },
+      },
     },
   });
   return result;

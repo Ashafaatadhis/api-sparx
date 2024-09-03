@@ -10,6 +10,6 @@ const router = express.Router();
 
 router.get("/", getAllController);
 router.get("/:id", getDetailController);
-router.get("/:id/songs", getAllSongController);
+router.get("/:id/songs/:genre?/:subgenre?", getAllSongController);
 
 export default router;

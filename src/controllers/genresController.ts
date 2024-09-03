@@ -6,7 +6,7 @@ import {
   deleteData,
   getDetail,
 } from "../services/genresServices";
-import { responseGenre } from "../dto/genres.dto";
+import { responseGenre, responseGenreWithSubGenre } from "../dto/genres.dto";
 import logger from "../utils/logger";
 
 export const getAllController = async (req: Request, res: Response) => {
@@ -17,7 +17,7 @@ export const getAllController = async (req: Request, res: Response) => {
       status: 200,
       message: "Succesfully Get All Genres",
       data: result.map((value) => {
-        return responseGenre(value);
+        return responseGenreWithSubGenre(value);
       }),
     });
   } catch (err: any) {
@@ -36,7 +36,7 @@ export const getDetailController = async (req: Request, res: Response) => {
     return res.status(200).json({
       status: 200,
       message: "Succesfully Get Genre",
-      data: result ? responseGenre(result) : null,
+      data: result ? responseGenreWithSubGenre(result) : null,
     });
   } catch (err: any) {
     logger.error("Get Error: Failed to Get Genre");

@@ -45,19 +45,53 @@ export const getDetail = async (id: string) => {
   });
   return result;
 };
-export const getAllSong = async (id: string) => {
-  const result = await prisma.playlistSong.findMany({
+export const getAllSong = async (
+  id: string,
+  skip: number,
+  take: number,
+  genre: number,
+  subgenre: number
+) => {
+  const result = await prisma.song.findMany({
+    take,
+    skip,
     include: {
-      Playlist: true,
-      Song: true,
+      Genre: {
+        select: {
+          id: true,
+          genreName: true,
+        },
+      },
+      SubGenre: {
+        select: {
+          id: true,
+          subGenreName: true,
+        },
+      },
     },
     where: {
-      playlistId: parseInt(id),
-      Playlist: {
-        isPublic: true,
+      ...(genre > 0 ? { genreId: genre } : {}),
+      ...(subgenre > 0 ? { genreId: genre, subGenreId: subgenre } : {}),
+      playlistSong: {
+        some: {
+          playlistId: parseInt(id),
+          deletedAt: null,
+        },
+      },
+    },
+  });
+  const count = await prisma.song.count({
+    where: {
+      ...(genre > 0 ? { genreId: genre } : {}),
+      ...(subgenre > 0 ? { genreId: genre, subGenreId: subgenre } : {}),
+      playlistSong: {
+        some: {
+          playlistId: parseInt(id),
+          deletedAt: null,
+        },
       },
     },
   });
 
-  return result;
+  return { count, result };
 };

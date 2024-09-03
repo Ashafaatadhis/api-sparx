@@ -1,11 +1,13 @@
 generator client {
   provider = "prisma-client-js"
+  
 }
 
 datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
- 
+  shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
+   
 }
 
 model User {
@@ -33,9 +35,9 @@ model DownloadPermission {
   createdAt  DateTime  @default(now())
   updatedAt  DateTime  @default(now())
   deletedAt  DateTime?
-  Playlist   Playlist? @relation(fields: [playlistId], references: [id])
-  Song       Song?     @relation(fields: [songId], references: [id])
-  User       User      @relation(fields: [userId], references: [id])
+  Playlist   Playlist? @relation(fields: [playlistId], references: [id], onDelete: Cascade)
+  Song       Song?     @relation(fields: [songId], references: [id], onDelete: Cascade)
+  User       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, songId, playlistId, deletedAt])
   @@index([playlistId], map: "DownloadPermission_playlistId_fkey")
@@ -60,7 +62,7 @@ model SubGenre {
   updatedAt    DateTime  @default(now())
   deletedAt    DateTime?
   song         Song[]
-  Genre        Genre     @relation(fields: [genreId], references: [id])
+  Genre        Genre     @relation(fields: [genreId], references: [id], onDelete: Cascade)
 
   @@index([genreId], map: "SubGenre_genreId_fkey")
 }
@@ -68,7 +70,7 @@ model SubGenre {
 model Song {
   id                 Int                  @id @default(autoincrement())
   title              String
-  singer             String
+  singer             String?
   coverSong          String?
   genreId            Int
   subGenreId         Int?
@@ -83,9 +85,9 @@ model Song {
   deletedAt          DateTime?
   downloadPermission DownloadPermission[]
   playlistSong       PlaylistSong[]
-  Genre              Genre                @relation(fields: [genreId], references: [id])
-  SubGenre           SubGenre?            @relation(fields: [subGenreId], references: [id])
-  User               User                 @relation(fields: [uploadedBy], references: [id])
+  Genre              Genre                @relation(fields: [genreId], references: [id], onDelete: Cascade)
+  SubGenre           SubGenre?            @relation(fields: [subGenreId], references: [id], onDelete: Cascade)
+  User               User                 @relation(fields: [uploadedBy], references: [id], onDelete: Cascade)
 
   @@index([genreId], map: "Song_genreId_fkey")
   @@index([subGenreId], map: "Song_subGenreId_fkey")
@@ -94,6 +96,8 @@ model Song {
 
 model Playlist {
   id                 Int                  @id @default(autoincrement())
+  cover              String
+  description        String  @db.Text 
   playlistName       String
   createdBy          Int
   isPublic           Boolean
@@ -101,7 +105,7 @@ model Playlist {
   updatedAt          DateTime             @default(now())
   deletedAt          DateTime?
   downloadPermission DownloadPermission[]
-  User               User                 @relation(fields: [createdBy], references: [id])
+  User               User                 @relation(fields: [createdBy], references: [id], onDelete: Cascade)
   playlistSong       PlaylistSong[]
 
   @@index([createdBy], map: "Playlist_createdBy_fkey")
@@ -114,8 +118,8 @@ model PlaylistSong {
   createdAt  DateTime  @default(now())
   updatedAt  DateTime  @default(now())
   deletedAt  DateTime?
-  Playlist   Playlist  @relation(fields: [playlistId], references: [id])
-  Song       Song      @relation(fields: [songId], references: [id])
+  Playlist   Playlist  @relation(fields: [playlistId], references: [id], onDelete: Cascade)
+  Song       Song      @relation(fields: [songId], references: [id], onDelete: Cascade)
 
   @@index([playlistId], map: "PlaylistSong_playlistId_fkey")
   @@index([songId], map: "PlaylistSong_songId_fkey")

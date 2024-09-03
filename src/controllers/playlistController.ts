@@ -10,14 +10,40 @@ import {
   deleteSongInPlaylist,
 } from "../services/playlistServices";
 
-import { responsePlaylist, responsePlaylistSong } from "../dto/playlist.dto";
+import {
+  responsePlaylist,
+  responsePlaylistSong,
+  responsePlaylistWithTotalSong,
+} from "../dto/playlist.dto";
 import logger from "../utils/logger";
 import { RequestCustom } from "../middlewares/authMiddleware";
 
 import playlistPolicy from "../policy/playlistPolicy";
+import { uploadSingle } from "@/utils/uploadFile";
+import deleteFile from "@/utils/deleteFiles";
+
+interface QueryParams {
+  page?: string;
+  pageSize?: string;
+}
+interface Params {
+  genre?: string;
+  subgenre?: string;
+}
 
 export const getAllController = async (req: RequestCustom, res: Response) => {
   try {
+    const { page = "1", pageSize = "10" }: QueryParams = req.query;
+    const { genre, subgenre }: Params = req.params;
+
+    const pageNumber = parseInt(page, 10);
+    const pageSizeNumber = parseInt(pageSize, 10);
+    const genreNumber = parseInt(genre, 10);
+    const subgenreNumber = parseInt(subgenre, 10);
+
+    const skip = (pageNumber - 1) * pageSizeNumber;
+    const take = pageSizeNumber;
+
     if (!req?.user) {
       logger.error("Get All Error: User not Found");
       return res
@@ -25,16 +51,28 @@ export const getAllController = async (req: RequestCustom, res: Response) => {
         .json({ status: 500, message: "Failed to retrieve playlists" });
     }
 
-    const result = await getAllByUserId(req.user.sub);
+    const { count, result } = await getAllByUserId(
+      req.user.sub,
+      skip,
+      take,
+      genreNumber,
+      subgenreNumber
+    );
     logger.info("Get All Success: Successfully retrieved playlists");
     return res.status(200).json({
       status: 200,
       message: "Successfully retrieved playlists",
+      meta: {
+        currentPage: pageNumber,
+        pageSize: pageSizeNumber,
+        count,
+      },
       data: result.map((value) => {
-        return responsePlaylist(value);
+        return responsePlaylistWithTotalSong(value);
       }),
     });
   } catch (err: any) {
+    console.log(err);
     logger.error("Get All Error: Failed to retrieve playlists");
     return res
       .status(500)
@@ -58,7 +96,7 @@ export const getDetailController = async (
     return res.status(200).json({
       status: 200,
       message: "Succesfully retrieved playlist",
-      data: result ? responsePlaylist(result) : null,
+      data: result ? responsePlaylistWithTotalSong(result) : null,
     });
   } catch (err: any) {
     logger.error("Get Error: Failed to retrieve playlist");
@@ -76,6 +114,29 @@ export const postController = async (req: RequestCustom, res: Response) => {
         .status(500)
         .json({ status: 500, message: "Failed to retrieve playlist" });
     }
+
+    if (Array.isArray(req.files?.cover)) {
+      logger.error(
+        "Add Error: Failed to upload New song, please upload single file"
+      );
+      return res
+        .status(500)
+        .json({ status: 500, message: "Please upload single file" });
+    }
+
+    // jika cover ada, maka upload ke cloudinary
+    if (req.files?.cover) {
+      const cover = await uploadSingle(req.files.cover, "cover");
+      if (!cover) {
+        logger.error("Add Error: Failed to upload File");
+        return res
+          .status(500)
+          .json({ status: 500, message: "Failed to upload a file" });
+      }
+      // proses memasukkan coverSong url ke body
+      req.body.cover = cover.secure_url;
+    }
+
     req.body.createdBy = req.user.sub;
     const result = await insertData(req.body);
     logger.info("Add Success: Successfully created playlist");
@@ -103,12 +164,36 @@ export const updateController = async (req: RequestCustom, res: Response) => {
         .json({ status: 500, message: "Failed to update playlist" });
     }
 
+    if (Array.isArray(req.files?.cover)) {
+      logger.error(
+        "Add Error: Failed to upload New song, please upload single file"
+      );
+      return res
+        .status(500)
+        .json({ status: 500, message: "Please upload single file" });
+    }
+
     const getPlaylist = await getDetailByUserId(id, req.user.sub);
     if (!getPlaylist) {
       logger.error("Edit Error: Playlist not found");
       return res
         .status(500)
         .json({ status: 500, message: "Failed to update playlist" });
+    }
+
+    // jika coverSong ada, maka upload ke cloudinary
+    if (req.files?.cover) {
+      const cover = await uploadSingle(req.files.cover, "cover");
+      if (!cover) {
+        logger.error("Add Error: Failed to upload File");
+        return res
+          .status(500)
+          .json({ status: 500, message: "Failed to upload a file" });
+      }
+
+      if (getPlaylist.cover) await deleteFile(getPlaylist.cover);
+      // proses memasukkan coverSong url ke body
+      req.body.cover = cover.secure_url;
     }
 
     // jika update punya orang lain

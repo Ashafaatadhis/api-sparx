@@ -40,7 +40,28 @@ export const checkAudio = (form: string, type: "POST" | "EDIT") => {
   };
 };
 
-export const checkImage = (form: string) => {
+export const checkImagePost = (form: string) => {
+  return async (req: Request, res: Response, next: NextFunction) => {
+    const file: any = req.files && req.files[form];
+
+    if (!file) {
+      return res
+        .status(500)
+        .json({ status: 500, message: `${form} is Requirements` });
+    }
+    const extension = path.extname(file.name).toLowerCase();
+    const mimeType = file.mimetype;
+
+    if (extension !== ".webp" || mimeType !== "image/webp") {
+      return res
+        .status(500)
+        .json({ status: 500, message: `${form} must be in WEBP Format` });
+    }
+
+    next();
+  };
+};
+export const checkImageUpdate = (form: string) => {
   return async (req: Request, res: Response, next: NextFunction) => {
     const file: any = req.files && req.files[form];
 

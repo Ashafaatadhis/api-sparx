@@ -2,13 +2,28 @@ import prisma from "../config/prisma";
 import { Genre } from "@prisma/client";
 
 export const getAll = async () => {
-  const result = await prisma.genre.findMany();
+  const result = await prisma.genre.findMany({
+    include: {
+      subGenre: {
+        where: {
+          deletedAt: null,
+        },
+      },
+    },
+  });
   return result;
 };
 export const getDetail = async (id: string) => {
   const result = await prisma.genre.findFirst({
     where: {
       id: parseInt(id),
+    },
+    include: {
+      subGenre: {
+        where: {
+          deletedAt: null,
+        },
+      },
     },
   });
   return result;

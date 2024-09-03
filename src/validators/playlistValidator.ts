@@ -11,6 +11,12 @@ const postValidationRules = () => {
       .not()
       .isEmpty()
       .withMessage("playlistName is required"),
+    check("description")
+      .isString()
+      .escape()
+      .not()
+      .isEmpty()
+      .withMessage("description is required"),
     check("isPublic")
       .not()
       .isEmpty()
@@ -54,6 +60,12 @@ const editValidationRules = () => {
       .not()
       .isEmpty()
       .withMessage("playlistName is required"),
+    check("description")
+      .isString()
+      .escape()
+      .not()
+      .isEmpty()
+      .withMessage("description is required"),
     check("isPublic")
       .not()
       .isEmpty()

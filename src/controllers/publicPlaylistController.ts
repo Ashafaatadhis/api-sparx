@@ -11,6 +11,15 @@ import {
 } from "../dto/publicPlaylist.dto";
 import logger from "../utils/logger";
 
+interface QueryParams {
+  page?: string;
+  pageSize?: string;
+}
+interface Params {
+  genre?: string;
+  subgenre?: string;
+}
+
 export const getAllController = async (req: Request, res: Response) => {
   try {
     const result = await getAll();
@@ -48,12 +57,34 @@ export const getDetailController = async (req: Request, res: Response) => {
 };
 export const getAllSongController = async (req: Request, res: Response) => {
   try {
+    const { page = "1", pageSize = "10" }: QueryParams = req.query;
+    const { genre, subgenre }: Params = req.params;
+
+    const pageNumber = parseInt(page, 10);
+    const pageSizeNumber = parseInt(pageSize, 10);
+    const genreNumber = parseInt(genre, 10);
+    const subgenreNumber = parseInt(subgenre, 10);
+
+    const skip = (pageNumber - 1) * pageSizeNumber;
+    const take = pageSizeNumber;
+
     const { id } = req.params;
-    const result = await getAllSong(id);
+    const { count, result } = await getAllSong(
+      id,
+      skip,
+      take,
+      genreNumber,
+      subgenreNumber
+    );
     logger.info("Get Success: Successfully retrieved songs in the playlist");
     return res.status(200).json({
       status: 200,
       message: "Successfully retrieved songs in the playlist",
+      meta: {
+        currentPage: pageNumber,
+        pageSize: pageSizeNumber,
+        count,
+      },
       data: result.map((v) => {
         return responsePublicPlaylistSong(v);
       }),

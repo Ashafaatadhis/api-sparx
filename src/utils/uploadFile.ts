@@ -16,10 +16,11 @@ export const uploadSingle = async (
     }
 
     const extension = files.name.split(".").reverse()[0];
+    console.log(extension);
     const stream = cloudinary.uploader.upload_stream(
       {
         format: extension,
-        resource_type: "raw",
+        resource_type: "auto",
         folder,
       },
       (error, result) => {
