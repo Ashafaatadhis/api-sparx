@@ -8,6 +8,8 @@ import publicPlaylistRoutes from "../routes/publicPlaylistRoutes";
 import downloadPerissionRoutes from "../routes/downloadPermissionRoutes";
 import userRoutes from "../routes/userRoutes";
 import cloudinary from "../config/cloudinary";
+import { authentication } from "@/middlewares/authMiddleware";
+import { getDetailController } from "@/controllers/playlistController";
 const router = express.Router();
 
 // cloudinary purpose
@@ -26,7 +28,10 @@ router.use("/auth", authRoutes);
 router.use("/genres", genresRoutes);
 router.use("/sub-genres", subGenresRoutes);
 router.use("/songs", songRoutes);
+
+router.use("/playlist/:id", authentication(), getDetailController);
 router.use("/playlists", playlistRoutes);
+
 router.use("/public/playlists", publicPlaylistRoutes);
 router.use("/download-permissions", downloadPerissionRoutes);
 router.use("/users", userRoutes);

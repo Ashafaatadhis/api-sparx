@@ -9,7 +9,7 @@ import express from "express";
 const router = express.Router();
 
 router.get("/", getAllController);
-router.get("/:id", getDetailController);
-router.get("/:id/songs/:genre?/:subgenre?", getAllSongController);
+router.get("/:link", getDetailController);
+router.get("/:link/songs/:genre?/:subgenre?", getAllSongController);
 
 export default router;

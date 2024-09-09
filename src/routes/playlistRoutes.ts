@@ -1,11 +1,15 @@
 import { checkImagePost, checkImageUpdate } from "@/middlewares/songMiddleware";
 import {
   deleteController,
-  deletPlaylistSongController,
+  deletePlaylistSongController,
+  deleteSharePlaylistController,
   getAllController,
+  getAllSongController,
   getDetailController,
   postController,
   postPlaylistController,
+  postSharePlaylistController,
+  putSharePlaylistController,
   updateController,
 } from "../controllers/playlistController";
 import { authentication } from "../middlewares/authMiddleware";
@@ -18,14 +22,15 @@ import {
 } from "../validators/playlistValidator";
 
 import express from "express";
+import rbacMiddleware from "@/middlewares/rbacMiddleware";
 
 const router = express.Router();
 
 router.get("/:genre?/:subgenre?", authentication(), getAllController);
-router.get("/:id", authentication(), getDetailController);
 router.post(
   "/",
   authentication(),
+  rbacMiddleware(["ADMIN"], "update-genre"),
   checkImagePost("cover"),
   postValidationRules(),
   validate,
@@ -34,17 +39,53 @@ router.post(
 router.put(
   "/:id",
   authentication(),
+  rbacMiddleware(["ADMIN"], "update-genre"),
   checkImageUpdate("cover"),
   editValidationRules(),
   validate,
   updateController
 );
-router.delete("/:id", authentication(), deleteController);
+router.delete(
+  "/:id",
+  authentication(),
+  rbacMiddleware(["ADMIN"], "update-genre"),
+  deleteController
+);
+
+// share playlist
+router.post(
+  "/:id/share",
+  authentication(),
+  rbacMiddleware(["ADMIN"], "update-genre"),
+  validate,
+  postSharePlaylistController
+);
+router.put(
+  "/:playlistId/share/:id",
+  authentication(),
+  rbacMiddleware(["ADMIN"], "update-genre"),
+  validate,
+  putSharePlaylistController
+);
+router.delete(
+  "/:id/share",
+  authentication(),
+  rbacMiddleware(["ADMIN"], "update-genre"),
+
+  deleteSharePlaylistController
+);
 
 // song to playlist
+router.get(
+  "/:id/songs/:genre?/:subgenre?",
+  authentication(),
+  rbacMiddleware(["ADMIN"], "update-genre"),
+  getAllSongController
+);
 router.post(
   "/:id/songs",
   authentication(),
+  rbacMiddleware(["ADMIN"], "update-genre"),
   postSongToPlaylistValidationRules(),
   validate,
   postPlaylistController
@@ -52,7 +93,8 @@ router.post(
 router.delete(
   "/:id/songs/:songId",
   authentication(),
-  deletPlaylistSongController
+  rbacMiddleware(["ADMIN"], "update-genre"),
+  deletePlaylistSongController
 );
 
 export default router;

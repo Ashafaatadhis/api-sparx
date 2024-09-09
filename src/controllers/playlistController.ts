@@ -8,10 +8,16 @@ import {
   insertDataSongToPlaylist,
   getDataSongInPlaylist,
   deleteSongInPlaylist,
+  insertSharePlaylist,
+  deleteSharePlaylist,
+  getDetailSharePlaylist,
+  editSharePlaylist,
+  getAllSong,
 } from "../services/playlistServices";
 
 import {
   responsePlaylist,
+  responsePlaylistShare,
   responsePlaylistSong,
   responsePlaylistWithTotalSong,
 } from "../dto/playlist.dto";
@@ -21,6 +27,9 @@ import { RequestCustom } from "../middlewares/authMiddleware";
 import playlistPolicy from "../policy/playlistPolicy";
 import { uploadSingle } from "@/utils/uploadFile";
 import deleteFile from "@/utils/deleteFiles";
+import getExpiredShare from "@/utils/getExpiredShare";
+import generateLinkUnique from "@/utils/generateLinkUnique";
+import { responsePublicPlaylistSong } from "@/dto/publicPlaylist.dto";
 
 interface QueryParams {
   page?: string;
@@ -43,7 +52,7 @@ export const getAllController = async (req: RequestCustom, res: Response) => {
 
     const skip = (pageNumber - 1) * pageSizeNumber;
     const take = pageSizeNumber;
-    console.log(genreNumber, "AHOTY");
+
     if (!req?.user) {
       logger.error("Get All Error: User not Found");
       return res
@@ -52,7 +61,6 @@ export const getAllController = async (req: RequestCustom, res: Response) => {
     }
 
     const { count, result } = await getAllByUserId(
-      req.user.sub,
       skip,
       take,
       genreNumber,
@@ -91,7 +99,7 @@ export const getDetailController = async (
         .status(500)
         .json({ status: 500, message: "Failed to retrieve playlist" });
     }
-    const result = await getDetailByUserId(id, req.user.sub);
+    const result = await getDetailByUserId(id);
     logger.info("Get Success: Successfully retrieved playlist");
     return res.status(200).json({
       status: 200,
@@ -154,6 +162,49 @@ export const postController = async (req: RequestCustom, res: Response) => {
   }
 };
 
+export const getAllSongController = async (req: Request, res: Response) => {
+  try {
+    const { page = "1", pageSize = "10" }: QueryParams = req.query;
+    const { genre, subgenre }: Params = req.params;
+
+    const pageNumber = parseInt(page, 10);
+    const pageSizeNumber = parseInt(pageSize, 10);
+    const genreNumber = parseInt(genre, 10);
+    const subgenreNumber = parseInt(subgenre, 10);
+
+    const skip = (pageNumber - 1) * pageSizeNumber;
+    const take = pageSizeNumber;
+
+    const { id } = req.params;
+    const { count, result } = await getAllSong(
+      parseInt(id),
+      skip,
+      take,
+      genreNumber,
+      subgenreNumber
+    );
+    logger.info("Get Success: Successfully retrieved songs in the playlist");
+    return res.status(200).json({
+      status: 200,
+      message: "Successfully retrieved songs in the playlist",
+      meta: {
+        currentPage: pageNumber,
+        pageSize: pageSizeNumber,
+        count,
+      },
+      data: result.map((v) => {
+        return responsePublicPlaylistSong(v);
+      }),
+    });
+  } catch (err: any) {
+    logger.info("Get Error: Failed to retrieve songs in the playlist");
+    return res.status(500).json({
+      status: 500,
+      message: "Failed to retrieve songs in the playlist",
+    });
+  }
+};
+
 export const updateController = async (req: RequestCustom, res: Response) => {
   try {
     const { id } = req.params;
@@ -173,7 +224,7 @@ export const updateController = async (req: RequestCustom, res: Response) => {
         .json({ status: 500, message: "Please upload single file" });
     }
 
-    const getPlaylist = await getDetailByUserId(id, req.user.sub);
+    const getPlaylist = await getDetailByUserId(id);
     if (!getPlaylist) {
       logger.error("Edit Error: Playlist not found");
       return res
@@ -197,12 +248,12 @@ export const updateController = async (req: RequestCustom, res: Response) => {
     }
 
     // jika update punya orang lain
-    if (!playlistPolicy(req.user, getPlaylist)) {
-      logger.error("Edit Error: Forbidden");
-      return res
-        .status(401)
-        .json({ status: 401, message: "Forbidden to update" });
-    }
+    // if (!playlistPolicy(req.user, getPlaylist)) {
+    //   logger.error("Edit Error: Forbidden");
+    //   return res
+    //     .status(401)
+    //     .json({ status: 401, message: "Forbidden to update" });
+    // }
 
     const result = await editData(req.body, id);
     logger.error("Edit Success: Successfully updated playlist");
@@ -229,7 +280,7 @@ export const deleteController = async (req: RequestCustom, res: Response) => {
         .json({ status: 500, message: "Failed to delete playlist" });
     }
 
-    const getPlaylist = await getDetailByUserId(id, req.user.sub);
+    const getPlaylist = await getDetailByUserId(id);
     if (!getPlaylist) {
       logger.error("Delete Error: Playlist not found");
       return res
@@ -238,12 +289,12 @@ export const deleteController = async (req: RequestCustom, res: Response) => {
     }
 
     // jika delete punya orang lain
-    if (!playlistPolicy(req.user, getPlaylist)) {
-      logger.error("Delete Error: Forbidden");
-      return res
-        .status(401)
-        .json({ status: 401, message: "Forbidden to delete" });
-    }
+    // if (!playlistPolicy(req.user, getPlaylist)) {
+    //   logger.error("Delete Error: Forbidden");
+    //   return res
+    //     .status(401)
+    //     .json({ status: 401, message: "Forbidden to delete" });
+    // }
 
     if (!(await deleteData(id))) {
       logger.error("Delete Error: Failed to delete playlist");
@@ -280,7 +331,7 @@ export const postPlaylistController = async (
         .json({ status: 500, message: "Failed to add song to playlist" });
     }
 
-    const playlist = await getDetailByUserId(id, req.user.sub);
+    const playlist = await getDetailByUserId(id);
     if (!playlist) {
       logger.error("Delete Error: Failed to add song to playlist");
       return res
@@ -304,7 +355,151 @@ export const postPlaylistController = async (
   }
 };
 
-export const deletPlaylistSongController = async (
+// share playlist
+
+export const postSharePlaylistController = async (
+  req: RequestCustom,
+  res: Response
+) => {
+  try {
+    const { id } = req.params;
+    if (!req?.user) {
+      logger.error("Add Error: User not Found");
+      return res.status(500).json({ status: 500, message: "Unauthorized" });
+    }
+
+    // check if exist
+    const exist = await getDetailSharePlaylist(parseInt(id));
+    console.log(exist);
+    if (exist) {
+      logger.error("Add Error: This Playlist already shared");
+      return res
+        .status(500)
+        .json({ status: 500, message: "This Playlist already shared" });
+    }
+
+    //check playlist exist
+    const playlist = await getDetailByUserId(id);
+    if (!playlist) {
+      logger.error("Add Error: Playlist Not Found");
+      return res
+        .status(500)
+        .json({ status: 500, message: "Playlist Not Found" });
+    }
+
+    req.body.playlistId = playlist.id;
+    req.body.expired = getExpiredShare();
+    req.body.link = generateLinkUnique();
+
+    const result = await insertSharePlaylist(req.body);
+    logger.info("Add Success: Successfully share this playlist");
+    return res.status(200).json({
+      status: 200,
+      message: "Successfully share this playlist",
+      data: responsePlaylistShare(result),
+    });
+  } catch (err: any) {
+    console.log(err);
+    logger.error("Delete Error: Failed to share this playlist");
+    return res
+      .status(500)
+      .json({ status: 500, message: "Failed to share this playlist" });
+  }
+};
+
+export const putSharePlaylistController = async (
+  req: RequestCustom,
+  res: Response
+) => {
+  try {
+    const { playlistId, id } = req.params;
+    if (!req?.user) {
+      logger.error("Edit Error: User not Found");
+      return res.status(500).json({ status: 500, message: "Unauthorized" });
+    }
+
+    // check if exist
+    const exist = await getDetailSharePlaylist(parseInt(playlistId));
+
+    if (!exist) {
+      logger.error("Edit Error: This Playlist share not found");
+      return res
+        .status(500)
+        .json({ status: 500, message: "This Playlist share not found" });
+    }
+
+    //check playlist exist
+    const playlist = await getDetailByUserId(playlistId);
+    if (!playlist) {
+      logger.error("Edit Error: Playlist Not Found");
+      return res
+        .status(500)
+        .json({ status: 500, message: "Playlist Not Found" });
+    }
+
+    req.body.playlistId = playlist.id;
+    req.body.expired = getExpiredShare();
+    req.body.link = generateLinkUnique();
+
+    const result = await editSharePlaylist(parseInt(id), req.body);
+    logger.info("Edit Success: Successfully edit share this playlist");
+    return res.status(200).json({
+      status: 200,
+      message: "Successfully edit share this playlist",
+      data: responsePlaylistShare(result),
+    });
+  } catch (err: any) {
+    console.log(err);
+    logger.error("Edit Error: Failed to edit share this playlist");
+    return res
+      .status(500)
+      .json({ status: 500, message: "Failed to edit share this playlist" });
+  }
+};
+export const deleteSharePlaylistController = async (
+  req: RequestCustom,
+  res: Response
+) => {
+  try {
+    const { id } = req.params;
+    if (!req?.user) {
+      logger.error("Delete Error: User not Found");
+      return res.status(500).json({ status: 500, message: "Unauthorized" });
+    }
+
+    // check if exist
+    const exist = await getDetailSharePlaylist(parseInt(id));
+    if (!exist) {
+      logger.error("Delete Error: This Playlist already shared");
+      return res
+        .status(500)
+        .json({ status: 500, message: "This Playlist already shared" });
+    }
+
+    // get data
+
+    if (!(await deleteSharePlaylist(exist.id))) {
+      console.log("kenapa");
+      logger.error("Delete Error: Failed to delete share this playlist");
+      return res
+        .status(500)
+        .json({ status: 500, message: "Failed to delete share this playlist" });
+    }
+    logger.info("Delete Success: Successfully delete share this playlist");
+    return res.status(200).json({
+      status: 200,
+      message: "Successfully delete share this playlist",
+    });
+  } catch (err: any) {
+    console.log(err);
+    logger.error("Delete Error: Failed to delete share this playlist");
+    return res
+      .status(500)
+      .json({ status: 500, message: "Failed to delete share this playlist" });
+  }
+};
+
+export const deletePlaylistSongController = async (
   req: RequestCustom,
   res: Response
 ) => {
@@ -317,7 +512,7 @@ export const deletPlaylistSongController = async (
         .json({ status: 500, message: "Failed to remove song from playlist" });
     }
 
-    const getPlaylist = await getDetailByUserId(id, req.user.sub);
+    const getPlaylist = await getDetailByUserId(id);
     if (!getPlaylist) {
       logger.error("Delete Error: Playlist not found");
       return res
@@ -338,12 +533,12 @@ export const deletPlaylistSongController = async (
     }
 
     // jika delete punya orang lain
-    if (!playlistPolicy(req.user, getPlaylist)) {
-      logger.error("Delete Error: Forbidden");
-      return res
-        .status(401)
-        .json({ status: 401, message: "Forbidden to delete" });
-    }
+    // if (!playlistPolicy(req.user, getPlaylist)) {
+    //   logger.error("Delete Error: Forbidden");
+    //   return res
+    //     .status(401)
+    //     .json({ status: 401, message: "Forbidden to delete" });
+    // }
 
     if (!(await deleteSongInPlaylist(getPlaylist.id, parseInt(songId)))) {
       logger.error("Delete Error: Failed to remove song from playlist");

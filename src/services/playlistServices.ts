@@ -1,8 +1,7 @@
 import prisma from "../config/prisma";
-import { Playlist, PlaylistSong } from "@prisma/client";
+import { Playlist, PlaylistDownload, PlaylistSong } from "@prisma/client";
 
 export const getAllByUserId = async (
-  id: number,
   skip: number,
   take: number,
   genre: number,
@@ -42,6 +41,11 @@ export const getAllByUserId = async (
     skip,
     take,
     include: {
+      playlistDownload: {
+        where: {
+          deletedAt: null,
+        },
+      },
       playlistSong: {
         include: {
           Song: true,
@@ -99,13 +103,17 @@ export const getAllByUserId = async (
   });
   return { count, result };
 };
-export const getDetailByUserId = async (id: string, userId: number) => {
+export const getDetailByUserId = async (id: string) => {
   const result = await prisma.playlist.findFirst({
     where: {
       id: parseInt(id),
-      createdBy: userId,
     },
     include: {
+      playlistDownload: {
+        where: {
+          deletedAt: null,
+        },
+      },
       playlistSong: {
         include: {
           Song: true,
@@ -125,6 +133,69 @@ export const getDetailByUserId = async (id: string, userId: number) => {
       },
     },
   });
+  console.log(result, id, "WOII");
+  return result;
+};
+
+export const getAllSong = async (
+  playlistId: number,
+  skip: number,
+  take: number,
+  genre: number,
+  subgenre: number
+) => {
+  const result = await prisma.song.findMany({
+    take,
+    skip,
+    include: {
+      Genre: {
+        select: {
+          id: true,
+          genreName: true,
+        },
+      },
+      SubGenre: {
+        select: {
+          id: true,
+          subGenreName: true,
+        },
+      },
+    },
+    where: {
+      ...(genre > 0 ? { genreId: genre } : {}),
+      ...(subgenre > 0 ? { genreId: genre, subGenreId: subgenre } : {}),
+      playlistSong: {
+        some: {
+          playlistId,
+          deletedAt: null,
+        },
+      },
+    },
+  });
+
+  const count = await prisma.song.count({
+    where: {
+      ...(genre > 0 ? { genreId: genre } : {}),
+      ...(subgenre > 0 ? { genreId: genre, subGenreId: subgenre } : {}),
+      playlistSong: {
+        some: {
+          playlistId,
+          deletedAt: null,
+        },
+      },
+    },
+  });
+
+  return { count, result };
+};
+
+export const getDetailSharePlaylist = async (playlistId: number) => {
+  const result = await prisma.playlistDownload.findFirst({
+    where: {
+      playlistId,
+    },
+  });
+
   return result;
 };
 
@@ -169,6 +240,42 @@ export const insertDataSongToPlaylist = async (data: PlaylistSong) => {
 
   return result;
 };
+export const insertSharePlaylist = async (data: PlaylistDownload) => {
+  const result = await prisma.playlistDownload.create({
+    data,
+  });
+
+  return result;
+};
+
+export const editSharePlaylist = async (id: number, data: PlaylistDownload) => {
+  const result = await prisma.playlistDownload.update({
+    data: data,
+    where: {
+      id,
+    },
+  });
+
+  return result;
+};
+
+export const deleteSharePlaylist = async (id: number) => {
+  const find = await prisma.playlistDownload.findFirst({
+    where: {
+      id,
+    },
+  });
+
+  if (!find) return false;
+  const result = await prisma.playlistDownload.deleteMany({
+    where: {
+      id,
+    },
+  });
+
+  return result;
+};
+
 export const getDataSongInPlaylist = async (
   playlistId: number,
   songId: number

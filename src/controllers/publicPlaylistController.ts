@@ -14,6 +14,7 @@ import logger from "../utils/logger";
 interface QueryParams {
   page?: string;
   pageSize?: string;
+  link?: string;
 }
 interface Params {
   genre?: string;
@@ -40,8 +41,9 @@ export const getAllController = async (req: Request, res: Response) => {
 };
 export const getDetailController = async (req: Request, res: Response) => {
   try {
-    const { id } = req.params;
-    const result = await getDetail(id);
+    const { link } = req.params;
+
+    const result = await getDetail(link);
     logger.info("Get Success: Successfully retrieved public playlist");
     return res.status(200).json({
       status: 200,
@@ -68,9 +70,9 @@ export const getAllSongController = async (req: Request, res: Response) => {
     const skip = (pageNumber - 1) * pageSizeNumber;
     const take = pageSizeNumber;
 
-    const { id } = req.params;
+    const { link } = req.params;
     const { count, result } = await getAllSong(
-      id,
+      link,
       skip,
       take,
       genreNumber,

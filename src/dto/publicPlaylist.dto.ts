@@ -55,13 +55,15 @@ export const responsePublicPlaylistSong = (data: SongPlaylist) => {
 export const responsePublicPlaylist = (data: PlaylistWithSongs) => {
   return {
     id: data.id,
-    playlistName: data.playlistName,
+    playListName: data.playlistName,
     createdBy: data.createdBy,
+    cover: data.cover,
+    description: data.description,
     isPublic: data.isPublic,
     createdAt: data.createdAt,
     updatedAt: data.updatedAt,
     deletedAt: data.deletedAt,
-    songs: data.playlistSong.map((value) => {
+    Songs: data.playlistSong.map((value) => {
       return {
         id: value.Song.id,
         title: value.Song.title,
