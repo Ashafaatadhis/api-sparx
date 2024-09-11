@@ -13,6 +13,7 @@ import {
   getDetailSharePlaylist,
   editSharePlaylist,
   getAllSong,
+  getDetailSharePlaylistByLinkId,
 } from "../services/playlistServices";
 
 import {
@@ -24,12 +25,12 @@ import {
 import logger from "../utils/logger";
 import { RequestCustom } from "../middlewares/authMiddleware";
 
-import playlistPolicy from "../policy/playlistPolicy";
 import { uploadSingle } from "@/utils/uploadFile";
 import deleteFile from "@/utils/deleteFiles";
 import getExpiredShare from "@/utils/getExpiredShare";
 import generateLinkUnique from "@/utils/generateLinkUnique";
 import { responsePublicPlaylistSong } from "@/dto/publicPlaylist.dto";
+import isExpired from "@/utils/isExpired";
 
 interface QueryParams {
   page?: string;
@@ -362,29 +363,45 @@ export const postSharePlaylistController = async (
   res: Response
 ) => {
   try {
-    const { id } = req.params;
+    const { playlistId } = req.params;
     if (!req?.user) {
       logger.error("Add Error: User not Found");
-      return res.status(500).json({ status: 500, message: "Unauthorized" });
-    }
-
-    // check if exist
-    const exist = await getDetailSharePlaylist(parseInt(id));
-    console.log(exist);
-    if (exist) {
-      logger.error("Add Error: This Playlist already shared");
-      return res
-        .status(500)
-        .json({ status: 500, message: "This Playlist already shared" });
+      return res.status(404).json({ status: 404, message: "Unauthorized" });
     }
 
     //check playlist exist
-    const playlist = await getDetailByUserId(id);
+    const playlist = await getDetailByUserId(playlistId);
     if (!playlist) {
       logger.error("Add Error: Playlist Not Found");
       return res
-        .status(500)
-        .json({ status: 500, message: "Playlist Not Found" });
+        .status(404)
+        .json({ status: 404, message: "Playlist Not Found" });
+    }
+
+    // check if exist
+    const exist = await getDetailSharePlaylist(parseInt(playlistId));
+
+    if (exist) {
+      if (isExpired(exist.expired.toString())) {
+        req.body.playlistId = playlist.id;
+        req.body.expired = getExpiredShare();
+        req.body.link = generateLinkUnique();
+
+        const result = await editSharePlaylist(exist.id, req.body);
+        logger.info("Add Success: Successfully share this playlist");
+        return res.status(200).json({
+          status: 200,
+          message: "Successfully share this playlist",
+          data: responsePlaylistShare(result),
+        });
+      }
+
+      logger.info("Add Success: Link Already Created");
+      return res.status(200).json({
+        status: 200,
+        message: "Link Already Created",
+        data: responsePlaylistShare(exist),
+      });
     }
 
     req.body.playlistId = playlist.id;
@@ -407,79 +424,66 @@ export const postSharePlaylistController = async (
   }
 };
 
-export const putSharePlaylistController = async (
+export const getSharePlaylistController = async (
   req: RequestCustom,
   res: Response
 ) => {
   try {
-    const { playlistId, id } = req.params;
+    const { uniqueLinkId } = req.params;
     if (!req?.user) {
-      logger.error("Edit Error: User not Found");
-      return res.status(500).json({ status: 500, message: "Unauthorized" });
+      logger.error("Delete Error: User not Found");
+      return res.status(404).json({ status: 404, message: "Unauthorized" });
     }
 
     // check if exist
-    const exist = await getDetailSharePlaylist(parseInt(playlistId));
-
+    const exist = await getDetailSharePlaylistByLinkId(uniqueLinkId);
     if (!exist) {
-      logger.error("Edit Error: This Playlist share not found");
+      logger.error("Delete Error: This Playlist Not Found");
       return res
-        .status(500)
-        .json({ status: 500, message: "This Playlist share not found" });
+        .status(404)
+        .json({ status: 404, message: "This Playlist Not Found" });
     }
 
-    //check playlist exist
-    const playlist = await getDetailByUserId(playlistId);
-    if (!playlist) {
-      logger.error("Edit Error: Playlist Not Found");
-      return res
-        .status(500)
-        .json({ status: 500, message: "Playlist Not Found" });
-    }
+    // get data
 
-    req.body.playlistId = playlist.id;
-    req.body.expired = getExpiredShare();
-    req.body.link = generateLinkUnique();
-
-    const result = await editSharePlaylist(parseInt(id), req.body);
-    logger.info("Edit Success: Successfully edit share this playlist");
+    logger.info("Get Success: Successfully Get share playlist");
     return res.status(200).json({
       status: 200,
-      message: "Successfully edit share this playlist",
-      data: responsePlaylistShare(result),
+      message: "Successfully Get share playlist",
+      data: exist,
     });
   } catch (err: any) {
     console.log(err);
-    logger.error("Edit Error: Failed to edit share this playlist");
+    logger.error("Get Error: Failed to get share this playlist");
     return res
       .status(500)
-      .json({ status: 500, message: "Failed to edit share this playlist" });
+      .json({ status: 500, message: "Failed to get share this playlist" });
   }
 };
+
 export const deleteSharePlaylistController = async (
   req: RequestCustom,
   res: Response
 ) => {
   try {
-    const { id } = req.params;
+    const { uniqueLinkId } = req.params;
     if (!req?.user) {
       logger.error("Delete Error: User not Found");
-      return res.status(500).json({ status: 500, message: "Unauthorized" });
+      return res.status(404).json({ status: 404, message: "Unauthorized" });
     }
 
     // check if exist
-    const exist = await getDetailSharePlaylist(parseInt(id));
+    const exist = await getDetailSharePlaylistByLinkId(uniqueLinkId);
     if (!exist) {
-      logger.error("Delete Error: This Playlist already shared");
+      logger.error("Delete Error: This Playlist Not Found");
       return res
-        .status(500)
-        .json({ status: 500, message: "This Playlist already shared" });
+        .status(404)
+        .json({ status: 404, message: "This Playlist Not Found" });
     }
 
     // get data
 
     if (!(await deleteSharePlaylist(exist.id))) {
-      console.log("kenapa");
       logger.error("Delete Error: Failed to delete share this playlist");
       return res
         .status(500)

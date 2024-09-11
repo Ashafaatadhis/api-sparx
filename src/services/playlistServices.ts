@@ -1,5 +1,5 @@
 import prisma from "../config/prisma";
-import { Playlist, PlaylistDownload, PlaylistSong } from "@prisma/client";
+import { Playlist, PlaylistLink, PlaylistSong } from "@prisma/client";
 
 export const getAllByUserId = async (
   skip: number,
@@ -41,7 +41,7 @@ export const getAllByUserId = async (
     skip,
     take,
     include: {
-      playlistDownload: {
+      PlaylistLink: {
         where: {
           deletedAt: null,
         },
@@ -109,7 +109,7 @@ export const getDetailByUserId = async (id: string) => {
       id: parseInt(id),
     },
     include: {
-      playlistDownload: {
+      PlaylistLink: {
         where: {
           deletedAt: null,
         },
@@ -190,9 +190,19 @@ export const getAllSong = async (
 };
 
 export const getDetailSharePlaylist = async (playlistId: number) => {
-  const result = await prisma.playlistDownload.findFirst({
+  const result = await prisma.playlistLink.findFirst({
     where: {
       playlistId,
+    },
+  });
+
+  return result;
+};
+
+export const getDetailSharePlaylistByLinkId = async (uniqueLinkId: string) => {
+  const result = await prisma.playlistLink.findFirst({
+    where: {
+      id: uniqueLinkId,
     },
   });
 
@@ -240,17 +250,17 @@ export const insertDataSongToPlaylist = async (data: PlaylistSong) => {
 
   return result;
 };
-export const insertSharePlaylist = async (data: PlaylistDownload) => {
-  const result = await prisma.playlistDownload.create({
+export const insertSharePlaylist = async (data: PlaylistLink) => {
+  const result = await prisma.playlistLink.create({
     data,
   });
 
   return result;
 };
 
-export const editSharePlaylist = async (id: number, data: PlaylistDownload) => {
-  const result = await prisma.playlistDownload.update({
-    data: data,
+export const editSharePlaylist = async (id: string, data: PlaylistLink) => {
+  const result = await prisma.playlistLink.update({
+    data,
     where: {
       id,
     },
@@ -259,15 +269,15 @@ export const editSharePlaylist = async (id: number, data: PlaylistDownload) => {
   return result;
 };
 
-export const deleteSharePlaylist = async (id: number) => {
-  const find = await prisma.playlistDownload.findFirst({
+export const deleteSharePlaylist = async (id: string) => {
+  const find = await prisma.playlistLink.findFirst({
     where: {
       id,
     },
   });
 
   if (!find) return false;
-  const result = await prisma.playlistDownload.deleteMany({
+  const result = await prisma.playlistLink.deleteMany({
     where: {
       id,
     },

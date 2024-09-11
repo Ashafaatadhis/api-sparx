@@ -9,7 +9,10 @@ import downloadPerissionRoutes from "../routes/downloadPermissionRoutes";
 import userRoutes from "../routes/userRoutes";
 import cloudinary from "../config/cloudinary";
 import { authentication } from "@/middlewares/authMiddleware";
-import { getDetailController } from "@/controllers/playlistController";
+import {
+  getDetailController,
+  getSharePlaylistController,
+} from "@/controllers/playlistController";
 const router = express.Router();
 
 // cloudinary purpose
@@ -29,6 +32,11 @@ router.use("/genres", genresRoutes);
 router.use("/sub-genres", subGenresRoutes);
 router.use("/songs", songRoutes);
 
+router.get(
+  "/playlist/generate-link/:uniqueLinkId",
+  authentication(),
+  getSharePlaylistController
+);
 router.use("/playlist/:id", authentication(), getDetailController);
 router.use("/playlists", playlistRoutes);
 
