@@ -10,8 +10,8 @@ datasource db {
    
 }
 
-model PlaylistDownload {
-    id                 Int                  @id @default(autoincrement())
+model PlaylistLink {
+    id                 String               @id @default(uuid())
     link               String @db.Text
     expired            DateTime
     createdAt          DateTime             @default(now())
@@ -21,7 +21,7 @@ model PlaylistDownload {
     Playlist   Playlist @relation(fields: [playlistId], references: [id], onDelete: Cascade)
 
     @@unique([playlistId, deletedAt])
-    @@index([playlistId], map: "PlaylistDownload_playlistId_fkey")
+    @@index([playlistId], map: "PlaylistLink_playlistId_fkey")
 
 }
 
@@ -122,7 +122,7 @@ model Playlist {
   downloadPermission DownloadPermission[]
   User               User                 @relation(fields: [createdBy], references: [id], onDelete: Cascade)
   playlistSong       PlaylistSong[]
-  playlistDownload   PlaylistDownload[]
+  PlaylistLink   PlaylistLink[]
 
   @@index([createdBy], map: "Playlist_createdBy_fkey")
 }
