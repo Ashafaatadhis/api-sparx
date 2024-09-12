@@ -23,12 +23,11 @@ export const getAll = async () => {
   return result;
 };
 export const getDetail = async (link: string) => {
-  const playlistDownload = await prisma.playlistDownload.findFirst({
+  const playlistDownload = await prisma.playlistLink.findFirst({
     where: {
       link,
     },
   });
-  console.log(playlistDownload);
 
   const result = await prisma.playlist.findFirst({
     include: {
@@ -59,19 +58,19 @@ export const getAllSong = async (
   genre: number,
   subgenre: number
 ) => {
-  const playlistDownload = await prisma.playlistDownload.findFirst({
+  const playlistLink = await prisma.playlistLink.findFirst({
     select: {
       playlistId: true,
     },
     where: {
-      link,
+      link: { contains: link },
       expired: {
         gt: new Date(), // Memeriksa apakah expired lebih besar dari tanggal saat ini
       },
     },
   });
-  console.log(playlistDownload, link);
-  if (!playlistDownload) {
+
+  if (!playlistLink) {
     return { count: 0, result: [] };
   }
 
@@ -97,19 +96,20 @@ export const getAllSong = async (
       ...(subgenre > 0 ? { genreId: genre, subGenreId: subgenre } : {}),
       playlistSong: {
         some: {
-          playlistId: playlistDownload?.playlistId,
+          playlistId: playlistLink?.playlistId,
           deletedAt: null,
         },
       },
     },
   });
+
   const count = await prisma.song.count({
     where: {
       ...(genre > 0 ? { genreId: genre } : {}),
       ...(subgenre > 0 ? { genreId: genre, subGenreId: subgenre } : {}),
       playlistSong: {
         some: {
-          playlistId: playlistDownload?.playlistId,
+          playlistId: playlistLink?.playlistId,
           deletedAt: null,
         },
       },

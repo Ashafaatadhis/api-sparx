@@ -1,16 +1,11 @@
-import {
-  Playlist,
-  PlaylistDownload,
-  PlaylistSong,
-  Prisma,
-} from "@prisma/client";
+import { Playlist, PlaylistLink, PlaylistSong, Prisma } from "@prisma/client";
 
 type PlayListWithTotalSong = Prisma.PlaylistGetPayload<{
   where: {
     createdBy: number;
   };
   include: {
-    playlistDownload: {
+    PlaylistLink: {
       where: {
         deletedAt: null;
       };
@@ -55,7 +50,7 @@ export const responsePlaylistWithTotalSong = (data: PlayListWithTotalSong) => {
     playListName: data.playlistName,
     description: data.description,
     cover: data.cover,
-    link: data.playlistDownload?.[0],
+    link: data.PlaylistLink?.[0],
     Songs: data.playlistSong.map((v) => v.Song),
     totalSong: data._count,
     createdBy: data.createdBy,
@@ -75,7 +70,7 @@ export const responsePlaylistSong = (data: PlaylistSong) => {
     deletedAt: data.deletedAt,
   };
 };
-export const responsePlaylistShare = (data: PlaylistDownload) => {
+export const responsePlaylistShare = (data: PlaylistLink) => {
   return {
     id: data.id,
     playlistId: data.playlistId,

@@ -41,6 +41,7 @@ export const getAll = async (
       ...(subgenre > 0 ? { genreId: genre, subGenreId: subgenre } : {}),
     },
   });
+  console.log(count);
   return { result, count };
 };
 export const getDetail = async (id: string) => {

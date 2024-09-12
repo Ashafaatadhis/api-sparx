@@ -5,7 +5,7 @@ prisma.$use(async (params: any, next) => {
     params.action === "findMany" ||
     params.action === "findFirst" ||
     params.action === "findUnique" ||
-    params.action === "findCount"
+    params.action === "count"
   ) {
     // Tambahkan filter untuk mengambil data yang belum dihapus (deletedAt = null)
     params.args = params.args || {};

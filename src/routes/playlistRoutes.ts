@@ -6,10 +6,10 @@ import {
   getAllController,
   getAllSongController,
   getDetailController,
+  getSharePlaylistController,
   postController,
   postPlaylistController,
   postSharePlaylistController,
-  putSharePlaylistController,
   updateController,
 } from "../controllers/playlistController";
 import { authentication } from "../middlewares/authMiddleware";
@@ -54,21 +54,15 @@ router.delete(
 
 // share playlist
 router.post(
-  "/:id/share",
+  "/:playlistId/generate-link",
   authentication(),
   rbacMiddleware(["ADMIN"], "update-genre"),
   validate,
   postSharePlaylistController
 );
-router.put(
-  "/:playlistId/share/:id",
-  authentication(),
-  rbacMiddleware(["ADMIN"], "update-genre"),
-  validate,
-  putSharePlaylistController
-);
+
 router.delete(
-  "/:id/share",
+  "/generate-link/:uniqueLinkId",
   authentication(),
   rbacMiddleware(["ADMIN"], "update-genre"),
 
