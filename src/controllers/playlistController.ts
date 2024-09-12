@@ -25,12 +25,12 @@ import {
 import logger from "../utils/logger";
 import { RequestCustom } from "../middlewares/authMiddleware";
 
-import { uploadSingle } from "@/utils/uploadFile";
-import deleteFile from "@/utils/deleteFiles";
-import getExpiredShare from "@/utils/getExpiredShare";
-import generateLinkUnique from "@/utils/generateLinkUnique";
-import { responsePublicPlaylistSong } from "@/dto/publicPlaylist.dto";
-import isExpired from "@/utils/isExpired";
+import { uploadSingle } from "../utils/uploadFile";
+import deleteFile from "../utils/deleteFiles";
+import getExpiredShare from "../utils/getExpiredShare";
+import generateLinkUnique from "../utils/generateLinkUnique";
+import { responsePublicPlaylistSong } from "../dto/publicPlaylist.dto";
+import isExpired from "../utils/isExpired";
 
 interface QueryParams {
   page?: string;
