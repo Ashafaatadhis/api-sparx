@@ -24,6 +24,9 @@ const seed = async () => {
   //   "Hyperpop",
   //   "Chillwave",
   // ];
+
+  const result = await prisma.song.count();
+  console.log(result);
   // const a = await prisma.genre.create({
   //   data: {
   //     genreName: "Pop",
@@ -57,24 +60,24 @@ const seed = async () => {
   // await prisma.$queryRaw`DELETE FROM Playlist`;
   // await prisma.$queryRaw`DELETE FROM Song`;
   // await prisma.user.deleteMany();
-  let genPassword = await hashPassword("admin123");
-  await prisma.user.create({
-    data: {
-      email: "admin@gmail.com",
-      username: "admin",
-      password: (genPassword && genPassword) as string,
-      role: "ADMIN",
-    },
-  });
-  genPassword = await hashPassword("testing123");
-  await prisma.user.create({
-    data: {
-      email: "testing1@gmail.com",
-      username: "testing1",
-      password: (genPassword && genPassword) as string,
-      role: "USER",
-    },
-  });
+  // let genPassword = await hashPassword("admin123");
+  // await prisma.user.create({
+  //   data: {
+  //     email: "admin@gmail.com",
+  //     username: "admin",
+  //     password: (genPassword && genPassword) as string,
+  //     role: "ADMIN",
+  //   },
+  // });
+  // genPassword = await hashPassword("testing123");
+  // await prisma.user.create({
+  //   data: {
+  //     email: "testing1@gmail.com",
+  //     username: "testing1",
+  //     password: (genPassword && genPassword) as string,
+  //     role: "USER",
+  //   },
+  // });
   // genPassword = await hashPassword("testing123");
   // await prisma.user.create({
   //   data: {

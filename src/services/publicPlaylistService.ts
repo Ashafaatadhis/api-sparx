@@ -25,7 +25,7 @@ export const getAll = async () => {
 export const getDetail = async (link: string) => {
   const playlistDownload = await prisma.playlistLink.findFirst({
     where: {
-      link,
+      link: { contains: link },
     },
   });
 
@@ -53,8 +53,7 @@ export const getDetail = async (link: string) => {
 };
 export const getAllSong = async (
   link: string,
-  skip: number,
-  take: number,
+
   genre: number,
   subgenre: number
 ) => {
@@ -75,8 +74,6 @@ export const getAllSong = async (
   }
 
   const result = await prisma.song.findMany({
-    take,
-    skip,
     include: {
       Genre: {
         select: {
@@ -115,6 +112,8 @@ export const getAllSong = async (
       },
     },
   });
+
+  console.log(result);
 
   return { count, result };
 };

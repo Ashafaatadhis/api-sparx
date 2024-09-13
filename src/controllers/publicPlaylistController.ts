@@ -59,22 +59,17 @@ export const getDetailController = async (req: Request, res: Response) => {
 };
 export const getAllSongController = async (req: Request, res: Response) => {
   try {
-    const { page = "1", pageSize = "10" }: QueryParams = req.query;
+    console.log("hit");
+
     const { genre, subgenre }: Params = req.params;
 
-    const pageNumber = parseInt(page, 10);
-    const pageSizeNumber = parseInt(pageSize, 10);
     const genreNumber = parseInt(genre, 10);
     const subgenreNumber = parseInt(subgenre, 10);
-
-    const skip = (pageNumber - 1) * pageSizeNumber;
-    const take = pageSizeNumber;
 
     const { link } = req.params;
     const { count, result } = await getAllSong(
       link,
-      skip,
-      take,
+
       genreNumber,
       subgenreNumber
     );
@@ -83,8 +78,6 @@ export const getAllSongController = async (req: Request, res: Response) => {
       status: 200,
       message: "Successfully retrieved songs in the playlist",
       meta: {
-        currentPage: pageNumber,
-        pageSize: pageSizeNumber,
         count,
       },
       data: result.map((v) => {
