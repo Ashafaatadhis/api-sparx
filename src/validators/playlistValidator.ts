@@ -16,7 +16,9 @@ const postValidationRules = () => {
       .escape()
       .not()
       .isEmpty()
-      .withMessage("description is required"),
+      .withMessage("description is required")
+      .optional(),
+
     check("isPublic")
       .not()
       .isEmpty()
@@ -65,7 +67,8 @@ const editValidationRules = () => {
       .escape()
       .not()
       .isEmpty()
-      .withMessage("description is required"),
+      .withMessage("description is required")
+      .optional(),
     check("isPublic")
       .not()
       .isEmpty()

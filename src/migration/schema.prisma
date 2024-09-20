@@ -112,7 +112,7 @@ model Song {
 model Playlist {
   id                 Int                  @id @default(autoincrement())
   cover              String
-  description        String  @db.Text 
+  description        String?  @db.Text 
   playlistName       String
   createdBy          Int
   isPublic           Boolean
